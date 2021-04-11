@@ -1,4 +1,4 @@
-package com.nullpointerworks.physics.engine.shape;
+package com.nullpointerworks.physics.engine;
 
 public class Material 
 {
