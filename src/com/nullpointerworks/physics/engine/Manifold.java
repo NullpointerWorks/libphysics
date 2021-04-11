@@ -59,9 +59,9 @@ public class Manifold
 			relativeA = vec2.sub(contact, A.position);
 			relativeB = vec2.sub(contact, B.position);
 			
-			relativeV = vec2.add(B.velocity, vec2.normal(relativeB, B.angularVelocity) );
+			relativeV = vec2.project(B.velocity, vec2.normal(relativeB), B.angularVelocity );
 			relativeV = vec2.sub(relativeV, A.velocity);
-			relativeV = vec2.sub(relativeV, vec2.normal(relativeA, A.angularVelocity) );
+			relativeV = vec2.project(relativeV, vec2.normal(relativeA), -A.angularVelocity );
 			
 			float m = vec2.dot(relativeV,relativeV); // square distance
 			
@@ -97,8 +97,8 @@ public class Manifold
 			relativeA = vec2.sub(contact, A.position);
 			relativeB = vec2.sub(contact, B.position);
 			
-			a = Vector2.add(A.velocity, vec2.normal(relativeA, A.angularVelocity) );
-			b = Vector2.add(B.velocity, vec2.normal(relativeB, B.angularVelocity) );
+			a = vec2.project(A.velocity, vec2.normal(relativeA), A.angularVelocity );
+			b = vec2.project(B.velocity, vec2.normal(relativeB), B.angularVelocity );
 			relativeV = vec2.sub(b,a);
 			
 			// get relative velocities. if separating, skip impulse
