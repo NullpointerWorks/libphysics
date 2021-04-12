@@ -2,6 +2,7 @@ package com.nullpointerworks.physics.engine;
 
 import com.nullpointerworks.math.FloatMath;
 import com.nullpointerworks.math.vector.Vector2;
+import com.nullpointerworks.physics.engine.math.ImpulseMath;
 
 public class Manifold 
 {
@@ -34,7 +35,7 @@ public class Manifold
 	 */
 	public void solve()
 	{
-		Collision.Test(this, A, B);
+		Collision.solve(this, A, B);
 	}
 	
 	/**

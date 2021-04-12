@@ -1,8 +1,8 @@
 package com.nullpointerworks.physics.engine.collision;
 
 import com.nullpointerworks.physics.engine.Composite;
-import com.nullpointerworks.physics.engine.ImpulseMath;
 import com.nullpointerworks.physics.engine.Manifold;
+import com.nullpointerworks.physics.engine.math.ImpulseMath;
 import com.nullpointerworks.physics.engine.shape.Polygon;
 
 import libMath.matrix.Matrix2;

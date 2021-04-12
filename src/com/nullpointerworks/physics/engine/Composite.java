@@ -2,13 +2,19 @@ package com.nullpointerworks.physics.engine;
 
 import java.util.HashMap;
 
-import com.nullpointerworks.math.vector.Vector2;
+
+import static com.nullpointerworks.physics.engine.math.MatrixMath.rotation;
+
+import static com.nullpointerworks.physics.engine.math.VectorMath.create;
+import static com.nullpointerworks.physics.engine.math.VectorMath.copy;
+import static com.nullpointerworks.physics.engine.math.VectorMath.add;
+import static com.nullpointerworks.physics.engine.math.VectorMath.cross;
+import static com.nullpointerworks.physics.engine.math.VectorMath.project;
+
 import com.nullpointerworks.physics.engine.shape.Shape;
 
 public class Composite 
 {
-	private final Vector2 vec2 = Vector2.New();
-	
 	/*
 	 * location
 	 */
@@ -46,9 +52,9 @@ public class Composite
 	
 	public Composite()
 	{
-		position 	= vec2.New(0f, 0f);
-		velocity 	= vec2.New(0f, 0f);
-		force 		= vec2.New(0f, 0f); // gets reset per update
+		position 	= create(0f, 0f);
+		velocity 	= create(0f, 0f);
+		force 		= create(0f, 0f); // gets reset per update
 		
 		rotation 		= rotation(0f);
 		orientation 	= 0f;
@@ -75,10 +81,10 @@ public class Composite
 	public Composite getCopy()
 	{
 		Composite c = New();
-
-		c.position = vec2.copy(position);
-		c.velocity = vec2.copy(velocity);
-		c.force = vec2.copy(force);
+		
+		c.position = copy(position);
+		c.velocity = copy(velocity);
+		c.force = copy(force);
 		
 		c.rotation = rotation(orientation);
 		c.orientation = orientation;
@@ -140,7 +146,7 @@ public class Composite
 	 */
 	public Composite setPosition(float x, float y) 
 	{
-		position = vec2.New(x, y);
+		position = create(x, y);
 		return this;
 	}
 	
@@ -169,7 +175,7 @@ public class Composite
 	 */
 	public void applyForce(float[] f)
 	{
-		force = vec2.add(force, f);
+		force = add(force, f);
 	}
 	
 	/**
@@ -178,8 +184,8 @@ public class Composite
 	 */
 	public void applyImpulse(float[] impulse, float[] contact)
 	{
-		velocity 		= vec2.project(velocity, impulse, inv_mass);
-		angularVelocity = angularVelocity + ( inv_inertia * vec2.cross(contact, impulse)[2] );
+		velocity 		= project(velocity, impulse, inv_mass);
+		angularVelocity = angularVelocity + ( inv_inertia * cross(contact, impulse) );
 	}
 	
 	/**
@@ -187,7 +193,7 @@ public class Composite
 	 */
 	public void clear() 
 	{
-		force 	= vec2.New(0f, 0f);
+		force 	= create(0f, 0f);
 		torque 	= 0f;
 	}
 	
@@ -200,7 +206,7 @@ public class Composite
 	{
 		if (shape != null)
 		{
-			float density = material.density;
+			float density = material.getDensity();
 			setMass(shape.mass(density) );
 			setInertia(shape.inertia(density) );
 		}
@@ -226,16 +232,5 @@ public class Composite
 	{
 		inertia = Ip;
 		inv_inertia = (Ip==0.0f)? 0.0f: 1f/Ip;
-	}
-	
-	/**
-	 * get the rotation matrix from the given rotations
-	 */
-	private float[][] rotation(float angle)
-	{
-		float cos = (float)StrictMath.cos(angle);
-		float sin = (float)StrictMath.sin(angle);
-		return new float[][]{{cos, -sin},
-							 {sin, cos}};
 	}
 }

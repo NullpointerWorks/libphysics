@@ -1,10 +1,9 @@
 package com.nullpointerworks.physics.engine.shape;
 
-import com.nullpointerworks.math.vector.Vector2;
+import com.nullpointerworks.physics.engine.math.VectorMath;
 
 public class Polygon extends Shape 
 {
-	private final Vector2 vec2 = Vector2.New();
 	private float area;
 	private float I;
 	public float[][] vertices;
@@ -43,10 +42,10 @@ public class Polygon extends Shape
 			// get triangle area assume third point is V(0,0)
 			float[] p0 = vertices[i];
 			float[] p1 = vertices[(i+1)%l];
-			float z = vec2.cross(p0, p1)[2];
+			float z = VectorMath.cross(p0, p1);
 			
 			// collect area squares
-			float xy2 = vec2.dot(p0,p0) + vec2.dot(p0,p1) + vec2.dot(p1,p1);
+			float xy2 = VectorMath.dot(p0,p0) + VectorMath.dot(p0,p1) + VectorMath.dot(p1,p1);
 			I += inv_12 * z * xy2;
 			area += z;
 		}

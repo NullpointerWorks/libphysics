@@ -1,5 +1,6 @@
 package com.nullpointerworks.physics.engine;
 
+import com.nullpointerworks.physics.engine.collision.*;
 import com.nullpointerworks.physics.engine.collision.ICollisionSolver;
 
 public class Collision 
@@ -9,14 +10,14 @@ public class Collision
 	 */
 	private static ICollisionSolver[][] solvers =
 	{
-		{CircleCircle.instance, CirclePolygon.instance},
-		{PolygonCircle.instance, PolygonPolygon.instance}
+		{new CircleCircle(), new CirclePolygon()},
+		{new PolygonCircle(), new PolygonPolygon()}
 	};
 	
 	/*
 	 * 
 	 */
-	public static void Test(Manifold m, Composite A, Composite B)
+	public static void solve(Manifold m, Composite A, Composite B)
 	{
 		int a = A.shape.type().ordinal();
 		int b = B.shape.type().ordinal();

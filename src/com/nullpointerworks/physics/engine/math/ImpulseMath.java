@@ -1,4 +1,4 @@
-package com.nullpointerworks.physics.engine;
+package com.nullpointerworks.physics.engine.math;
 
 import com.nullpointerworks.math.vector.Vector2;
 

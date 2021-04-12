@@ -1,0 +1,53 @@
+package com.nullpointerworks.physics.engine.math;
+
+public class VectorMath 
+{
+	public static float[] create(float x, float y) 
+	{
+		return new float[] {x, y};
+	}
+	
+	public static float[] copy(float[] v) 
+	{
+		return new float[] {v[0], v[1]};
+	}
+	
+	public static float[] neg(float[] v) 
+	{
+		return new float[] {-v[0], -v[1]};
+	}
+	
+	public static float[] add(float[] a, float[] b)
+	{
+		return new float[]{	a[0]+b[0],
+							a[1]+b[1]};
+	}
+	
+	public static float[] sub(float[] a, float[] b)
+	{
+		return new float[]{	a[0]-b[0],
+							a[1]-b[1]};
+	}
+	
+	public static float[] mul(float[] a, float f)
+	{
+		return new float[]{	a[0]*f,
+							a[1]*f};
+	}
+	
+	public static float cross(float[] a, float[] b) 
+	{
+		return a[0]*b[1]-a[1]*b[0];
+	}
+	
+	public static float dot(float[] a, float[] b)
+	{
+		return a[0]*b[0] + a[1]*b[1];
+	}
+	
+	public static float[] project(float[] A, float[] a, float lambda)
+	{
+		return add(A, mul(a, lambda) );
+	}
+	
+}

@@ -2,6 +2,7 @@ package com.nullpointerworks.physics.engine.collision;
 
 import com.nullpointerworks.physics.engine.Composite;
 import com.nullpointerworks.physics.engine.Manifold;
+import com.nullpointerworks.physics.engine.math.VectorMath;
 
 public class PolygonCircle implements ICollisionSolver
 {
@@ -12,7 +13,8 @@ public class PolygonCircle implements ICollisionSolver
 	{
 		CirclePolygon.instance.solve(m, B, A);
 		if (m.contact_count > 0)
-			m.normal = Vector2.neg(m.normal);
+		{
+			m.normal = VectorMath.neg(m.normal);
+		}
 	}
-
 }

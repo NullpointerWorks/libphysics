@@ -2,14 +2,14 @@ package com.nullpointerworks.physics.engine;
 
 public class Material 
 {
-	public final float density;
-	public final float restitution;
-	public final float staticF;
-	public final float kineticF; // dynamic/sliding friction
+	private final float density;
+	private final float restitution;
+	private final float staticF;
+	private final float kineticF; // dynamic/sliding friction
 	
 	private Material(float d, float r)
 	{
-		this(d,r, 0.5f,0.3f);
+		this(d, r, 0.5f, 0.3f);
 	}
 	
 	private Material(float d, float r, float sF, float kF)
@@ -19,6 +19,11 @@ public class Material
 		staticF 	= sF;
 		kineticF 	= kF;
 	}
+
+	public float getDensity() {return density;}
+	public float getRestitution() {return restitution;}
+	public float getStaticFriction() {return staticF;}
+	public float getDynamicFriction() {return kineticF;}
 	
 	// ================== custom =======================
 
