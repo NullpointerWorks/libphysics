@@ -47,9 +47,9 @@ public class Manifold
 		Material matB = B.material;
 		
 		// get average restitution
-		restitution = FloatMath.min(matA.restitution, matB.restitution);
-		sFriction = FloatMath.pythagoras(matA.staticF, matB.staticF);
-		kFriction = FloatMath.pythagoras(matA.kineticF, matB.kineticF);
+		restitution = FloatMath.min(matA.getRestitution(), matB.getRestitution());
+		sFriction = FloatMath.pythagoras(matA.getStaticFriction(), matB.getStaticFriction());
+		kFriction = FloatMath.pythagoras(matA.getDynamicFriction(), matB.getDynamicFriction());
 		
 		// for each contact point: see if its colliding, or resting on a surface
 		for (int i=0; i<contact_count; i++)

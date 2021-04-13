@@ -2,28 +2,26 @@ package com.nullpointerworks.physics.engine.collision;
 
 import com.nullpointerworks.physics.engine.Composite;
 import com.nullpointerworks.physics.engine.Manifold;
-
-import libMath.vector.Vector2;
+import com.nullpointerworks.physics.engine.shape.Circle;
+import com.nullpointerworks.physics.engine.math.VectorMath;
 
 public class CircleCircle implements ICollisionSolver 
 {
-	public static final CircleCircle instance = new CircleCircle();
-	
 	/*
 	 * testing circle A onto B
 	 */
 	@Override
 	public void solve(Manifold m, Composite A, Composite B) 
 	{
-		float radiusA = ((Circle)A.shape).radius;
-		float radiusB = ((Circle)B.shape).radius;
+		float radiusA = ((Circle)A.shape).radius();
+		float radiusB = ((Circle)B.shape).radius();
 
 		float[] posA = A.position;
 		float[] posB = B.position;
 		
 		// find distances between points
-		float[] tangent = Vector2.sub(posB, posA);
-		float dist 		= Vector2.magnitude(tangent);
+		float[] tangent = VectorMath.sub(posB, posA);
+		float dist 		= VectorMath.magnitude(tangent);
 		float radii		= radiusA + radiusB;
 		
 		// no collision
@@ -38,8 +36,8 @@ public class CircleCircle implements ICollisionSolver
 		{
 			// drive the two circles away in some direction.
 			m.contact_count = 1;
-			m.contacts[0] 	= Vector2.copy(A.position);
-			m.normal 		= Vector2.New(1f, 0f);
+			m.contacts[0] 	= VectorMath.copy(A.position);
+			m.normal 		= VectorMath.create(1f, 0f);
 			m.penetration 	= radiusA;
 		}
 		// if partially overlapping
@@ -47,8 +45,8 @@ public class CircleCircle implements ICollisionSolver
 		{
 			m.contact_count = 1;
 			m.penetration 	= radii - dist;
-			m.normal 		= Vector2.mul(tangent, 1f/dist); // normalize tangent
-			m.contacts[0] 	= Vector2.projection(posA, m.normal, radiusA); // find deepest penetration
+			m.normal 		= VectorMath.mul(tangent, 1f/dist); // normalize tangent
+			m.contacts[0] 	= VectorMath.project(posA, m.normal, radiusA); // find deepest penetration
 		}
 	}
 }

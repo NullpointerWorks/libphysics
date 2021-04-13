@@ -49,5 +49,23 @@ public class VectorMath
 	{
 		return add(A, mul(a, lambda) );
 	}
-	
+
+	public static float magnitude(float[] v)
+	{
+		return (float) StrictMath.sqrt( dot(v,v) );
+	}
+
+	public static float[] normalize(float[] a)
+	{
+		float x = a[0];
+		float y = a[1];
+		float m = magnitude(a);
+		float invm = 1f / m;
+		return new float[]{	x*invm, y*invm};
+	}
+
+	public static float[] normal(float[] v, float f) 
+	{
+		return new float[] {-f*v[0], -f*v[1]};
+	}
 }

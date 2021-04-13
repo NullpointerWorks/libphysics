@@ -5,12 +5,17 @@ import com.nullpointerworks.math.FloatMath;
 public class Circle extends Shape 
 {
 	private float area = 0f;
-	public float radius = 0f;
+	private float radius = 0f;
 	
 	public Circle(float r)
 	{
 		radius = r;
 		area = FloatMath.PI * radius * radius;
+	}
+	
+	public float radius()
+	{
+		return radius;
 	}
 	
 	@Override
