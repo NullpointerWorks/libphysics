@@ -1,6 +1,8 @@
 module libnpw.physics 
 {
 	requires libnpw.math;
+	requires libnpw.game;
+	requires libnpw.core;
 
 	exports com.nullpointerworks.physics;
 	exports com.nullpointerworks.physics.engine;
