@@ -1,7 +1,9 @@
 package com.nullpointerworks.test;
 
+import com.nullpointerworks.physics.GravitationConstants;
 import com.nullpointerworks.physics.engine.Composite;
 import com.nullpointerworks.physics.engine.Material;
+import com.nullpointerworks.physics.engine.math.VectorMath;
 import com.nullpointerworks.physics.engine.shape.Polygon;
 import com.nullpointerworks.test.controller.CanvasRenderCommand;
 import com.nullpointerworks.test.controller.RenderCommand;
@@ -20,16 +22,13 @@ public class MainEngine
 	{
 		PhysicsLoop mPhysiscSim 		= new PhysicsLoop();
 		GameLoop mGameSim 				= new GameLoop();
-		
-		GameView vWindow 				= new GameView();
-		
+		GameView vWindow 				= new GameView(800, 600);
 		RenderCommand cRenderToScreen 	= new CanvasRenderCommand(vWindow, mPhysiscSim);
 		
+		mPhysiscSim.setTargetFPS(60);
+		mPhysiscSim.setGravity( VectorMath.create(0f, -1f) , (float)GravitationConstants.EARTH);
 		
-		
-		
-		mPhysiscSim.setTargetFPS(80);
-		mGameSim.setTargetFPS(60);
+		mGameSim.setTargetFPS(30);
 		mGameSim.addRenderCommand(cRenderToScreen);
 		
 		mPhysiscSim.start();

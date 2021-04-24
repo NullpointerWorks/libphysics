@@ -8,10 +8,10 @@ public class GameView
 	private Window window;
 	private IntBuffer canvas;
 	
-	public GameView()
+	public GameView(int w, int h)
 	{
-		canvas = new IntBuffer(800,600);
-		window = new Window(800,600,"Rigid Body Physics Engine Test");
+		canvas = new IntBuffer(w,h);
+		window = new Window(w,h,"Rigid Body Physics Engine Test");
 	}
 	
 	public void setVisible(boolean b)
@@ -27,6 +27,16 @@ public class GameView
 	public void setPixel(int x, int y, int c)
 	{
 		canvas.plot(x,y,c);
+	}
+	
+	public void setPixels(int[] p)
+	{
+		canvas.plot(p);
+	}
+	
+	public IntBuffer getCanvas()
+	{
+		return canvas;
 	}
 	
 	public void swapCanvas()

@@ -1,11 +1,7 @@
 package com.nullpointerworks.physics.engine.math;
 
-import com.nullpointerworks.math.vector.Vector2;
-
 public class ImpulseMath 
 {
-	private static final Vector2 vec2 = Vector2.New();
-	
 	public static final float EPSILON 		= 0.0001f;
 	
 	public static final float CORRECTION 	= 0.5f;
@@ -19,11 +15,11 @@ public class ImpulseMath
 	/**
 	 * set the gravity resting constant for the engine
 	 */
-	public static void applyRestingConstant(float[] g, float dt)
+	public static float getRestingConstant(float[] g, float dt)
 	{
-		float[] gdt = vec2.mul(g, dt);
-		RESTING = vec2.dot(gdt,gdt) + EPSILON;
-		gdt = null;
+		float[] gdt = VectorMath.mul(g, dt);
+		RESTING = VectorMath.dot(gdt,gdt) + EPSILON;
+		return RESTING;
 	}
 	
 	/**
