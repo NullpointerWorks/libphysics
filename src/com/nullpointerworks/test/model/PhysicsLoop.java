@@ -30,11 +30,15 @@ public class PhysicsLoop extends Asap
 	public void onUpdate(double time) 
 	{
 		
+		
+		
 	}
 
 	@Override
 	public void onRender(double interpolation) 
 	{
+		
+		
 		
 	}
 

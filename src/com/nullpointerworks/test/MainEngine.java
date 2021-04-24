@@ -3,6 +3,8 @@ package com.nullpointerworks.test;
 import com.nullpointerworks.physics.engine.Composite;
 import com.nullpointerworks.physics.engine.Material;
 import com.nullpointerworks.physics.engine.shape.Polygon;
+import com.nullpointerworks.test.controller.CanvasRenderCommand;
+import com.nullpointerworks.test.controller.RenderCommand;
 import com.nullpointerworks.test.model.GameLoop;
 import com.nullpointerworks.test.model.PhysicsLoop;
 import com.nullpointerworks.test.view.GameView;
@@ -16,17 +18,27 @@ public class MainEngine
 	
 	public MainEngine()
 	{
-		GameView vWindow = new GameView();
+		PhysicsLoop mPhysiscSim 		= new PhysicsLoop();
+		GameLoop mGameSim 				= new GameLoop();
 		
-		PhysicsLoop mPhysiscSim = new PhysicsLoop();
+		GameView vWindow 				= new GameView();
+		
+		RenderCommand cRenderToScreen 	= new CanvasRenderCommand(vWindow, mPhysiscSim);
+		
+		
+		
+		
 		mPhysiscSim.setTargetFPS(80);
-		
-		GameLoop mGameSim = new GameLoop();
 		mGameSim.setTargetFPS(60);
+		mGameSim.addRenderCommand(cRenderToScreen);
 		
-		
-		
-		
+		mPhysiscSim.start();
+		mGameSim.start();
+		vWindow.setVisible(true);
+	}
+	
+	private void makeBox() 
+	{
 		
 		float[][] vBox = 
 		{
@@ -48,11 +60,5 @@ public class MainEngine
 		immovableBox.setShape( new Polygon(vBox, nBox) );
 		immovableBox.setMaterial( Material.Static() );
 		
-		
-		
-		
-		
-		mPhysiscSim.start();
-		mGameSim.start();
 	}
 }

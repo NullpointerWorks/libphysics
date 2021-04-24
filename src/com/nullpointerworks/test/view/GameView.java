@@ -1,7 +1,5 @@
 package com.nullpointerworks.test.view;
 
-import com.nullpointerworks.color.ColorFormat;
-import com.nullpointerworks.color.Colorizer;
 import com.nullpointerworks.core.Window;
 import com.nullpointerworks.core.buffer.IntBuffer;
 
@@ -9,16 +7,9 @@ public class GameView
 {
 	private Window window;
 	private IntBuffer canvas;
-	private Colorizer color;
-	private int BLACK;
-	private int WHITE;
 	
 	public GameView()
 	{
-		color = Colorizer.getColorizer( ColorFormat.RGB );
-		BLACK = color.toInt(0,0,0);
-		WHITE = color.toInt(255,255,255);
-		
 		canvas = new IntBuffer(800,600);
 		window = new Window(800,600,"Rigid Body Physics Engine Test");
 	}
@@ -28,9 +19,14 @@ public class GameView
 		window.setVisible(b);
 	}
 	
-	public void clearCanvas()
+	public void setCanvasColor(int c)
 	{
-		canvas.clear(BLACK);
+		canvas.clear(c);
+	}
+	
+	public void setPixel(int x, int y, int c)
+	{
+		canvas.plot(x,y,c);
 	}
 	
 	public void swapCanvas()
