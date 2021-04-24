@@ -68,19 +68,11 @@ public class Composite
 	}
 	
 	/**
-	 * returns a new empty composite
-	 */
-	public Composite New()
-	{
-		return new Composite();
-	}
-	
-	/**
 	 * returns a copy of this composite
 	 */
 	public Composite getCopy()
 	{
-		Composite c = New();
+		Composite c = new Composite();
 		
 		c.position = copy(position);
 		c.velocity = copy(velocity);

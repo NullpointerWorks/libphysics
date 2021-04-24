@@ -1,55 +1,60 @@
 package com.nullpointerworks.physics.test;
 
-import com.nullpointerworks.core.Window;
-import com.nullpointerworks.game.Asap;
+import com.nullpointerworks.physics.engine.Composite;
+import com.nullpointerworks.physics.engine.Material;
+import com.nullpointerworks.physics.engine.shape.Polygon;
 
-public class MainEngine extends Asap
+public class MainEngine
 {
 	public static void main(String[] args) 
 	{
 		new MainEngine();
 	}
 	
-	private Window window;
-	
 	public MainEngine()
 	{
-		window = new Window(800,600,"Rigid Body Physics Engine Test");
+		PhysicsLoop pl = new PhysicsLoop();
+		pl.setTargetFPS(80);
+		pl.start();
+		
+		RenderLoop rl = new RenderLoop();
+		rl.setTargetFPS(60);
+		rl.start();
 		
 		
-		this.setTargetFPS(60);
-		this.start();
-	}
+		
+		
+		
 
-	@Override
-	public void onInit() 
-	{
-		window.setVisible(true);
-	}
-
-	@Override
-	public void onUpdate(double dt) 
-	{
+		float[][] vBox = 
+		{
+			{0f, 0f},
+			{100f, 0f},
+			{100f, 20f},
+			{0f, 20f}	
+		};
+		
+		float[][] nBox = 
+		{
+			{1f,0f},
+			{0f,1f},
+			{-1f,0f},
+			{0f,-1f}	
+		};
+		
+		Composite immovableBox = new Composite();
+		immovableBox.setShape( new Polygon(vBox, nBox) );
+		immovableBox.setMaterial( Material.Static() );
+		
+		
+		pl.addComposite(immovableBox);
+		
+		
+		
+		
 		
 		
 		
 		
 	}
-
-	@Override
-	public void onRender(double lerp) 
-	{
-		
-		
-		
-		
-	}
-
-	@Override
-	public void onDispose() 
-	{
-		window.setVisible(false);
-		
-	}
-
 }
