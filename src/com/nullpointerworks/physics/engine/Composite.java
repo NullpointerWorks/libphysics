@@ -1,6 +1,7 @@
 package com.nullpointerworks.physics.engine;
 
 import java.util.HashMap;
+import java.util.Map;
 
 import com.nullpointerworks.physics.engine.material.Material;
 
@@ -18,7 +19,6 @@ public class Composite
 	 */
 	private Material material;
 	private Shape shape;
-	
 	
 	/*
 	 * location
@@ -47,7 +47,7 @@ public class Composite
 	public float[] force;
 	public float torque;
 	public boolean immovable;
-	public HashMap<Composite,Integer> ignore;
+	public Map<Composite,Integer> ignore;
 	
 	public Composite()
 	{
@@ -82,15 +82,6 @@ public class Composite
 	public Material getMaterial()
 	{
 		return material;
-	}
-	
-	/**
-	 * 
-	 * @return
-	 */
-	public Properties getProperty()
-	{
-		return property;
 	}
 	
 	/**

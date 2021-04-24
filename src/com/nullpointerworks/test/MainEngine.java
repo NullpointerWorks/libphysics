@@ -46,7 +46,7 @@ public class MainEngine
 		Composite circle = new Composite();
 		circle.setMaterial( MaterialFactory.Static() );
 		circle.setShape( new Circle( 20f ) );
-		
+		circle.setImmovable(true);
 		
 		circle.position = new float[] {300f,100f};
 		sim.addComposite(circle);
