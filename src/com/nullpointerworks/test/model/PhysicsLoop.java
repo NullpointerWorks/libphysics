@@ -1,4 +1,4 @@
-package com.nullpointerworks.physics.test;
+package com.nullpointerworks.test.model;
 
 import java.util.List;
 import java.util.Vector;

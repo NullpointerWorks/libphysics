@@ -1,13 +1,11 @@
-package com.nullpointerworks.physics.test;
+package com.nullpointerworks.test.view;
 
 import com.nullpointerworks.color.ColorFormat;
 import com.nullpointerworks.color.Colorizer;
 import com.nullpointerworks.core.Window;
 import com.nullpointerworks.core.buffer.IntBuffer;
-import com.nullpointerworks.game.Asap;
-import com.nullpointerworks.physics.engine.Composite;
 
-public class RenderLoop extends Asap
+public class GameView 
 {
 	private Window window;
 	private IntBuffer canvas;
@@ -15,9 +13,7 @@ public class RenderLoop extends Asap
 	private int BLACK;
 	private int WHITE;
 	
-	private Composite immovableBox;
-	
-	public RenderLoop()
+	public GameView()
 	{
 		color = Colorizer.getColorizer( ColorFormat.RGB );
 		BLACK = color.toInt(0,0,0);
@@ -27,29 +23,18 @@ public class RenderLoop extends Asap
 		window = new Window(800,600,"Rigid Body Physics Engine Test");
 	}
 	
-	@Override
-	public void onInit() 
+	public void setVisible(boolean b)
 	{
-		window.setVisible(true);
+		window.setVisible(b);
 	}
 	
-	@Override
-	public void onUpdate(double dt) 
-	{
-		
-	}
-	
-	@Override
-	public void onRender(double lerp) 
+	public void clearCanvas()
 	{
 		canvas.clear(BLACK);
-		
-		window.swap( canvas.content() );
 	}
 	
-	@Override
-	public void onDispose() 
+	public void swapCanvas()
 	{
-		window.setVisible(false);
+		window.swap( canvas.content() );
 	}
 }
