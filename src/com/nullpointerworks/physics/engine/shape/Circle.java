@@ -1,8 +1,10 @@
 package com.nullpointerworks.physics.engine.shape;
 
 import com.nullpointerworks.math.FloatMath;
+import com.nullpointerworks.physics.engine.Shape;
+import com.nullpointerworks.physics.engine.ShapeType;
 
-public class Circle extends Shape 
+public class Circle implements Shape 
 {
 	private float area = 0f;
 	private float radius = 0f;
@@ -19,31 +21,31 @@ public class Circle extends Shape
 	}
 	
 	@Override
-	public float area() 
+	public float getArea() 
 	{
 		return area;
 	}
 	
 	@Override
-	public float mass(float d) 
+	public float getMass(float d) 
 	{
 		return area * d;
 	}
 
 	@Override
-	public float inertia(float d) 
+	public float getInertia(float d) 
 	{
-		return mass(d) * radius * radius;
+		return getMass(d) * radius * radius;
 	}
 	
 	@Override
-	public ShapeType type() 
+	public ShapeType getType() 
 	{
 		return ShapeType.Circle;
 	}
 
 	@Override
-	public Shape clone() 
+	public Shape getClone() 
 	{
 		return new Circle(radius);
 	}

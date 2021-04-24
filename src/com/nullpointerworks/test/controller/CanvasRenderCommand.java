@@ -37,7 +37,10 @@ public class CanvasRenderCommand implements RenderCommand
 		canvas.clear(BLACK);
 		
 		
-		
+		for (Composite c : bodies)
+		{
+			c.getShape().getType();
+		}
 		
 		
 		vWindow.swapCanvas();

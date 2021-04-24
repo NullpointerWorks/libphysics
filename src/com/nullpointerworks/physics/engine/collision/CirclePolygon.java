@@ -1,5 +1,6 @@
 package com.nullpointerworks.physics.engine.collision;
 
+import com.nullpointerworks.physics.engine.CollisionSolver;
 import com.nullpointerworks.physics.engine.Composite;
 import com.nullpointerworks.physics.engine.Manifold;
 import com.nullpointerworks.physics.engine.math.ImpulseMath;
@@ -8,13 +9,13 @@ import com.nullpointerworks.physics.engine.math.VectorMath;
 import com.nullpointerworks.physics.engine.shape.Circle;
 import com.nullpointerworks.physics.engine.shape.Polygon;
 
-public class CirclePolygon implements ICollisionSolver
+public class CirclePolygon implements CollisionSolver
 {
 	@Override
 	public void solve(Manifold m, Composite A, Composite B) 
 	{
-		Circle shapeA 	= (Circle)A.shape;
-		Polygon shapeB 	= (Polygon)B.shape;
+		Circle shapeA 	= (Circle)A.getShape();
+		Polygon shapeB 	= (Polygon)B.getShape();
 		
 		float[][] rotation 	= B.rotation;
 		float[][] transpose = MatrixMath.transpose(rotation);

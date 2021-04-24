@@ -1,11 +1,12 @@
 package com.nullpointerworks.physics.engine.collision;
 
+import com.nullpointerworks.physics.engine.CollisionSolver;
 import com.nullpointerworks.physics.engine.Composite;
 import com.nullpointerworks.physics.engine.Manifold;
 import com.nullpointerworks.physics.engine.shape.Circle;
 import com.nullpointerworks.physics.engine.math.VectorMath;
 
-public class CircleCircle implements ICollisionSolver 
+public class CircleCircle implements CollisionSolver 
 {
 	/*
 	 * testing circle A onto B
@@ -13,8 +14,8 @@ public class CircleCircle implements ICollisionSolver
 	@Override
 	public void solve(Manifold m, Composite A, Composite B) 
 	{
-		float radiusA = ((Circle)A.shape).radius();
-		float radiusB = ((Circle)B.shape).radius();
+		float radiusA = ((Circle)A.getShape()).radius();
+		float radiusB = ((Circle)B.getShape()).radius();
 
 		float[] posA = A.position;
 		float[] posB = B.position;

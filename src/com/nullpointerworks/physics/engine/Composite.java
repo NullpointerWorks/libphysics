@@ -11,8 +11,6 @@ import static com.nullpointerworks.physics.engine.math.VectorMath.add;
 import static com.nullpointerworks.physics.engine.math.VectorMath.cross;
 import static com.nullpointerworks.physics.engine.math.VectorMath.project;
 
-import com.nullpointerworks.physics.engine.shape.Shape;
-
 public class Composite 
 {
 	/*
@@ -40,8 +38,8 @@ public class Composite
 	/*
 	 * composition
 	 */
-	public Material material;
-	public Shape shape;
+	private Material material;
+	private Shape shape;
 	
 	/*
 	 * other data
@@ -68,7 +66,26 @@ public class Composite
 	}
 	
 	/**
-	 * returns a copy of this composite
+	 * 
+	 * @return
+	 */
+	public Shape getShape() 
+	{
+		return shape;
+	}
+	
+	/**
+	 * 
+	 * @return
+	 */
+	public Material getMaterial() 
+	{
+		return material;
+	}
+	
+	/**
+	 * 
+	 * @return a copy of this composite
 	 */
 	public Composite getCopy()
 	{
@@ -199,8 +216,8 @@ public class Composite
 		if (shape != null)
 		{
 			float density = material.getDensity();
-			setMass(shape.mass(density) );
-			setInertia(shape.inertia(density) );
+			setMass(shape.getMass(density) );
+			setInertia(shape.getInertia(density) );
 		}
 	}
 	

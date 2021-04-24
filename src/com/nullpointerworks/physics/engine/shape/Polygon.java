@@ -3,7 +3,10 @@ package com.nullpointerworks.physics.engine.shape;
 import static com.nullpointerworks.physics.engine.math.VectorMath.cross;
 import static com.nullpointerworks.physics.engine.math.VectorMath.dot;
 
-public class Polygon extends Shape 
+import com.nullpointerworks.physics.engine.Shape;
+import com.nullpointerworks.physics.engine.ShapeType;
+
+public class Polygon implements Shape 
 {
 	private float area;
 	private float I;
@@ -54,31 +57,31 @@ public class Polygon extends Shape
 	}
 	
 	@Override
-	public float area() 
+	public float getArea() 
 	{
 		return area;
 	}
 	
 	@Override
-	public float mass(float d) 
+	public float getMass(float d) 
 	{
 		return area * d;
 	}
 	
 	@Override
-	public float inertia(float d) 
+	public float getInertia(float d) 
 	{
 		return I * d;
 	}
 	
 	@Override
-	public ShapeType type() 
+	public ShapeType getType() 
 	{
 		return ShapeType.Poly;
 	}
 	
 	@Override
-	public Shape clone() 
+	public Shape getClone() 
 	{
 		return new Polygon(vertices,normals,area,I);
 	}

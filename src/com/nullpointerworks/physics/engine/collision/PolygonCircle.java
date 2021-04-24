@@ -1,10 +1,11 @@
 package com.nullpointerworks.physics.engine.collision;
 
+import com.nullpointerworks.physics.engine.CollisionSolver;
 import com.nullpointerworks.physics.engine.Composite;
 import com.nullpointerworks.physics.engine.Manifold;
 import com.nullpointerworks.physics.engine.math.VectorMath;
 
-public class PolygonCircle implements ICollisionSolver
+public class PolygonCircle implements CollisionSolver
 {
 	private CirclePolygon instance = new CirclePolygon();
 

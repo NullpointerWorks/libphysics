@@ -8,7 +8,6 @@ import com.nullpointerworks.game.Asap;
 import com.nullpointerworks.physics.engine.Composite;
 import com.nullpointerworks.physics.engine.Manifold;
 import com.nullpointerworks.physics.engine.math.ImpulseMath;
-import com.nullpointerworks.physics.engine.math.VectorMath;
 
 import static com.nullpointerworks.physics.engine.math.VectorMath.mul;
 import static com.nullpointerworks.physics.engine.math.VectorMath.project;
@@ -95,9 +94,7 @@ public class PhysicsLoop extends Asap
 	{
 		contacts.clear();
 		
-		float resting = ImpulseMath.getRestingConstant(gravityVector, (float)dt);
-		
-		
+		ImpulseMath.getRestingConstant(gravityVector, (float)dt);
 		
 		int lb = bodies.size();
 		for (int a=0; a<lb; a++)
@@ -122,11 +119,10 @@ public class PhysicsLoop extends Asap
 			}
 		}
 		
-		
 		// ==== apply contact forces and accelerations
 		for (Composite C : bodies)
 		{
-			integrateForces(C,dt);
+			integrateForces(C, (float)dt);
 		}
 		
 		// ==== apply impulse
@@ -146,7 +142,7 @@ public class PhysicsLoop extends Asap
 		// ==== apply velocities
 		for (Composite C : bodies)
 		{
-			integrateVelocity(C, dt);
+			integrateVelocity(C, (float)dt);
 		}
 		
 		for (Manifold m : contacts)
@@ -159,7 +155,6 @@ public class PhysicsLoop extends Asap
 		{
 			C.clear();
 		}
-		
 	}
 	
 	@Override
@@ -180,5 +175,4 @@ public class PhysicsLoop extends Asap
 		bodies = null;
 		contacts = null;
 	}
-	
 }

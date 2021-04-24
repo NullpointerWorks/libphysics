@@ -43,8 +43,8 @@ public class Manifold
 	 */
 	public void preprare() 
 	{
-		Material matA = A.material;
-		Material matB = B.material;
+		Material matA = A.getMaterial();
+		Material matB = B.getMaterial();
 		
 		// get average restitution
 		restitution = FloatMath.min(matA.getRestitution(), matB.getRestitution());

@@ -1,5 +1,6 @@
 package com.nullpointerworks.physics.engine.collision;
 
+import com.nullpointerworks.physics.engine.CollisionSolver;
 import com.nullpointerworks.physics.engine.Composite;
 import com.nullpointerworks.physics.engine.Manifold;
 import com.nullpointerworks.physics.engine.math.ImpulseMath;
@@ -7,7 +8,7 @@ import com.nullpointerworks.physics.engine.math.MatrixMath;
 import com.nullpointerworks.physics.engine.math.VectorMath;
 import com.nullpointerworks.physics.engine.shape.Polygon;
 
-public class PolygonPolygon implements ICollisionSolver 
+public class PolygonPolygon implements CollisionSolver 
 {
 	/*
 	 * Gilbert-Johnson-Keerthi (GJK) algorithm
@@ -42,7 +43,7 @@ public class PolygonPolygon implements ICollisionSolver
 	 */
 	public void solve(Manifold m, Composite R, Composite I, int reference_index, boolean handedness)
 	{
-		Polygon shapeR 	= (Polygon)R.shape;
+		Polygon shapeR 	= (Polygon)R.getShape();
 		
 		float[][] incFace = new float[2][];
 		IncidentFace(incFace, R, I, reference_index);
@@ -116,8 +117,8 @@ public class PolygonPolygon implements ICollisionSolver
 	 */
 	private float LeastPenetrationAxes(int[] faceIndex, Composite A, Composite B)
 	{
-		Polygon shapeA 	= (Polygon)A.shape;
-		Polygon shapeB 	= (Polygon)B.shape;
+		Polygon shapeA 	= (Polygon)A.getShape();
+		Polygon shapeB 	= (Polygon)B.getShape();
 		
 		float best_dist = -Float.MAX_VALUE;
 		int best_index 	= 0;
@@ -190,8 +191,8 @@ public class PolygonPolygon implements ICollisionSolver
 	 */
 	private void IncidentFace(float[][] v, Composite R, Composite I, int index)
 	{
-		Polygon refPoly = (Polygon)R.shape;
-		Polygon incPoly = (Polygon)I.shape;
+		Polygon refPoly = (Polygon)R.getShape();
+		Polygon incPoly = (Polygon)I.getShape();
 		
 		float[][] refMatrix 	= R.rotation;
 		float[] ref_normal 		= refPoly.normals[index];
