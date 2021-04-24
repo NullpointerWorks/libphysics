@@ -2,30 +2,35 @@ package com.nullpointerworks.physics.engine;
 
 import java.util.HashMap;
 
+import com.nullpointerworks.physics.engine.material.Material;
 
 import static com.nullpointerworks.physics.engine.math.MatrixMath.rotation;
-
 import static com.nullpointerworks.physics.engine.math.VectorMath.create;
 import static com.nullpointerworks.physics.engine.math.VectorMath.copy;
 import static com.nullpointerworks.physics.engine.math.VectorMath.add;
 import static com.nullpointerworks.physics.engine.math.VectorMath.cross;
 import static com.nullpointerworks.physics.engine.math.VectorMath.project;
 
-public class Composite 
+public class Composite
 {
+	/*
+	 * composition
+	 */
+	private Material material;
+	private Shape shape;
+	
+	
 	/*
 	 * location
 	 */
 	public float[] position;
 	public float[] velocity;
-	public float[] force;
 	
 	/*
 	 * angle
 	 */
 	public float orientation;
 	public float angularVelocity;
-	public float torque;
 	
 	/*
 	 * mass
@@ -36,15 +41,11 @@ public class Composite
 	public float inv_inertia;
 	
 	/*
-	 * composition
-	 */
-	private Material material;
-	private Shape shape;
-	
-	/*
 	 * other data
 	 */
 	public float[][] rotation;
+	public float[] force;
+	public float torque;
 	public boolean immovable;
 	public HashMap<Composite,Integer> ignore;
 	
@@ -60,7 +61,7 @@ public class Composite
 		torque 			= 0f; // gets reset per update
 		
 		immovable 	= false;
-		material 	= Material.Medium();
+		material 	= MaterialFactory.Medium();
 		shape 		= null;
 		ignore 		= new HashMap<Composite,Integer>();
 	}
@@ -69,7 +70,7 @@ public class Composite
 	 * 
 	 * @return
 	 */
-	public Shape getShape() 
+	public Shape getShape()
 	{
 		return shape;
 	}
@@ -78,14 +79,46 @@ public class Composite
 	 * 
 	 * @return
 	 */
-	public Material getMaterial() 
+	public Material getMaterial()
 	{
 		return material;
 	}
 	
 	/**
 	 * 
-	 * @return a copy of this composite
+	 * @return
+	 */
+	public Properties getProperty()
+	{
+		return property;
+	}
+	
+	/**
+	 * set a material for this entity
+	 */
+	public void setMaterial(Material mat)
+	{
+		if (immovable) return;
+		material = mat;
+		compute();
+	}
+	
+	/**
+	 * provide a shape for the entity
+	 */
+	public void setShape(Shape sh)
+	{
+		shape = sh;
+		compute();
+	}
+	
+	
+	
+	
+	
+	/**
+	 * 
+	 * @return a copy of this entity
 	 */
 	public Composite getCopy()
 	{
@@ -107,65 +140,43 @@ public class Composite
 		
 		return c;
 	}
+
+	/**
+	 * set the location for this entity
+	 */
+	public void setPosition(float x, float y)
+	{
+		position = create(x, y);
+	}
 	
 	/**
-	 * set a material for this composite
+	 * set the entity to a specific angle
 	 */
-	public Composite setMaterial(Material mat)
+	public Composite setOrientation(float angle)
 	{
-		if (immovable) return this;
-		material = mat;
-		compute();
+		rotation = rotation(angle);
+		orientation = angle;
 		return this;
 	}
 	
 	/**
-	 * provide a shape for the composite
-	 */
-	public Composite setShape(Shape sh)
-	{
-		shape = sh;
-		compute();
-		return this;
-	}
-	
-	/**
-	 * set this object as immovable by the engine
+	 * set this entity as immovable by the engine
 	 */
 	public Composite setImmovable(boolean immovable) 
 	{
-		this.material = Material.Static();
+		this.material = MaterialFactory.Static();
 		this.immovable = immovable;
 		compute();
 		return this;
 	}
 	
 	/**
-	 * 
+	 * Add an entity to the blacklist to prevent interaction between the two.
 	 */
 	public Composite setBlacklist(Composite c)
 	{
 		if (ignore.containsKey(c)) return this;
 		ignore.put(c, ignore.size());
-		return this;
-	}
-
-	/**
-	 * set the location for this body
-	 */
-	public Composite setPosition(float x, float y) 
-	{
-		position = create(x, y);
-		return this;
-	}
-	
-	/**
-	 * set the composite to a specific angle
-	 */
-	public Composite setOrientation(float angle)
-	{
-		rotation = rotation(angle);
-		orientation = angle;
 		return this;
 	}
 	
@@ -188,8 +199,10 @@ public class Composite
 	}
 	
 	/**
+	 * <pre>
 	 * velocity = impulse / mass<br>
-	 * aVelocity = (contact x impulse) / inertia
+	 * angular velocity = (contact x impulse) / inertia
+	 * </pre>
 	 */
 	public void applyImpulse(float[] impulse, float[] contact)
 	{
@@ -225,7 +238,9 @@ public class Composite
 	 * calculate the mass<br>
 	 * d = density<br>
 	 * V = volume<br>
-	 * mass = density * volume;
+	 * <pre>
+	 * mass = density * volume
+	 * </pre>
 	 */
 	private void setMass(float m)
 	{
@@ -234,8 +249,10 @@ public class Composite
 	}
 	
 	/**
-	 * set the moment of inertia. This value comes from the Shape class<br>
-	 * Ip = SUM(m*r^2)<br>
+	 * set the moment of inertia. This value comes from the Shape class.
+	 * <pre>
+	 * Ip = SUM(m*r^2)
+	 * </pre>
 	 */
 	private void setInertia(float Ip)
 	{

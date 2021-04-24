@@ -2,9 +2,11 @@ package com.nullpointerworks.test;
 
 import com.nullpointerworks.physics.GravitationConstants;
 import com.nullpointerworks.physics.engine.Composite;
-import com.nullpointerworks.physics.engine.Material;
+import com.nullpointerworks.physics.engine.MaterialFactory;
 import com.nullpointerworks.physics.engine.math.VectorMath;
+import com.nullpointerworks.physics.engine.shape.Circle;
 import com.nullpointerworks.physics.engine.shape.Polygon;
+
 import com.nullpointerworks.test.controller.CanvasRenderCommand;
 import com.nullpointerworks.test.controller.RenderCommand;
 import com.nullpointerworks.test.model.GameLoop;
@@ -26,7 +28,7 @@ public class MainEngine
 		RenderCommand cRenderToScreen 	= new CanvasRenderCommand(vWindow, mPhysiscSim);
 		
 		mPhysiscSim.setTargetFPS(60);
-		mPhysiscSim.setGravity( VectorMath.create(0f, -1f) , (float)GravitationConstants.EARTH);
+		mPhysiscSim.setGravity( VectorMath.create(0f, -1f) , (float)GravitationConstants.EARTH );
 		
 		mGameSim.setTargetFPS(30);
 		mGameSim.addRenderCommand(cRenderToScreen);
@@ -34,9 +36,23 @@ public class MainEngine
 		mPhysiscSim.start();
 		mGameSim.start();
 		vWindow.setVisible(true);
+		
+		
+		makeCirle(mPhysiscSim);
 	}
 	
-	private void makeBox() 
+	private void makeCirle(PhysicsLoop sim) 
+	{
+		Composite circle = new Composite();
+		circle.setMaterial( MaterialFactory.Static() );
+		circle.setShape( new Circle( 20f ) );
+		
+		
+		circle.position = new float[] {300f,100f};
+		sim.addComposite(circle);
+	}
+	
+	private void makeBox(PhysicsLoop sim) 
 	{
 		
 		float[][] vBox = 
@@ -57,7 +73,8 @@ public class MainEngine
 		
 		Composite immovableBox = new Composite();
 		immovableBox.setShape( new Polygon(vBox, nBox) );
-		immovableBox.setMaterial( Material.Static() );
-		
+		immovableBox.setMaterial( MaterialFactory.Static() );
+
+		sim.addComposite(immovableBox);
 	}
 }

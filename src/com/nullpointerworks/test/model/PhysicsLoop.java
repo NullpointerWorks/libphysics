@@ -24,7 +24,7 @@ public class PhysicsLoop extends Asap
 		bodies 		= new Vector<Composite>();
 		contacts 	= new ArrayList<Manifold>();
 		
-		gravityVector = new float[] {0f, -9.8f};
+		gravityVector = new float[] {0f, 9.8f};
 	}
 	
 	public synchronized void setGravity(float[] vector, float acc)

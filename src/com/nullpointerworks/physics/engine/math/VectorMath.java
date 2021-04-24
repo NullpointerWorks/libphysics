@@ -1,5 +1,7 @@
 package com.nullpointerworks.physics.engine.math;
 
+import com.nullpointerworks.math.Approximate;
+
 public class VectorMath 
 {
 	public static float[] create(float x, float y) 
@@ -67,5 +69,12 @@ public class VectorMath
 	public static float[] normal(float[] v, float f) 
 	{
 		return new float[] {-f*v[0], -f*v[1]};
+	}
+	
+	public static float[] rotation(float angle)
+	{
+		float cs = (float)Approximate.cos(angle);
+		float sn = (float)Approximate.sin(angle);
+		return new float[]{cs,sn};
 	}
 }

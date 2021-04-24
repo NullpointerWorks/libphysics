@@ -14,8 +14,8 @@ public class CircleCircle implements CollisionSolver
 	@Override
 	public void solve(Manifold m, Composite A, Composite B) 
 	{
-		float radiusA = ((Circle)A.getShape()).radius();
-		float radiusB = ((Circle)B.getShape()).radius();
+		float radiusA = ((Circle)A.getShape()).getRadius();
+		float radiusB = ((Circle)B.getShape()).getRadius();
 
 		float[] posA = A.position;
 		float[] posB = B.position;

@@ -24,7 +24,7 @@ public class CirclePolygon implements CollisionSolver
 		float[][] normalsB 	= shapeB.normals;
 		
 		float[] norm,vc;
-		float radiusA = shapeA.radius(), dist;
+		float radiusA = shapeA.getRadius(), dist;
 		int v_count = verticesB.length;
 		
 		m.contact_count = 0;

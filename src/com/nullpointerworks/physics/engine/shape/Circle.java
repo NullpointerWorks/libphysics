@@ -15,7 +15,7 @@ public class Circle implements Shape
 		area = FloatMath.PI * radius * radius;
 	}
 	
-	public float radius()
+	public float getRadius()
 	{
 		return radius;
 	}
