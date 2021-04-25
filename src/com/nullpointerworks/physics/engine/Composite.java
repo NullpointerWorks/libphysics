@@ -4,7 +4,6 @@ import java.util.HashMap;
 import java.util.Map;
 
 import com.nullpointerworks.physics.engine.material.Material;
-import com.nullpointerworks.physics.engine.material.StaticMaterial;
 import com.nullpointerworks.physics.engine.motion.AngularMotion;
 import com.nullpointerworks.physics.engine.motion.LinearMotion;
 
@@ -144,22 +143,18 @@ public class Composite
 	/**
 	 * set this entity as immovable by the engine
 	 */
-	public Composite setImmovable(boolean immovable) 
+	public void setImmovable(boolean immovable) 
 	{
-		this.material = new StaticMaterial();
 		this.immovable = immovable;
-		compute();
-		return this;
 	}
 	
 	/**
 	 * Add an entity to the blacklist to prevent interaction between the two.
 	 */
-	public Composite setBlacklist(Composite c)
+	public void setBlacklist(Composite c)
 	{
-		if (ignore.containsKey(c)) return this;
+		if (ignore.containsKey(c)) return;
 		ignore.put(c, ignore.size());
-		return this;
 	}
 	
 	// =================================================
@@ -203,8 +198,8 @@ public class Composite
 	 */
 	public void clear() 
 	{
-		force 	= create(0f, 0f);
-		torque 	= 0f;
+		force = create(0f, 0f);
+		torque = 0f;
 	}
 	
 	// ====================================================
@@ -220,7 +215,6 @@ public class Composite
 		float density = material.getDensity();
 		setMass(shape.getMass(density) );
 		setInertia(shape.getInertia(density) );
-		
 	}
 	
 	/**

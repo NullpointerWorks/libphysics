@@ -24,18 +24,20 @@ public class CanvasRenderCommand implements RenderCommand
 	private int WHITE;
 	private int CYAN;
 	private int RED;
+	private float viewHeight;
 	
 	public CanvasRenderCommand(GameView v, PhysicsLoop s)
 	{
 		vWindow = v;
 		mPhysiscSim = s;
 		canvas = v.getCanvas();
+		viewHeight = (float)canvas.getHeight();
 		
-		color = Colorizer.getColorizer( ColorFormat.RGB );
-		BLACK = color.toInt(0,0,0);
-		WHITE = color.toInt(255,255,255);
-		CYAN = color.toInt(0,255,255);
-		RED = color.toInt(255,0,0);
+		color 	= Colorizer.getColorizer( ColorFormat.RGB );
+		BLACK 	= color.toInt(0,0,0);
+		WHITE 	= color.toInt(255,255,255);
+		CYAN 	= color.toInt(0,255,255);
+		RED 	= color.toInt(255,0,0);
 	}
 	
 	@Override
@@ -62,8 +64,10 @@ public class CanvasRenderCommand implements RenderCommand
 		Circle s 	= (Circle)e.getShape();
 		float r 	= s.getRadius();
 		float[] P 	= e.getLinearMotion().getPosition();
+		float[] V 	= e.getLinearMotion().getVelocity();
 		
-		
+		P[1] = viewHeight - P[1];
+		V[1] = -V[1];
 		
 		circle(P, r, WHITE, canvas);
 		
@@ -71,7 +75,7 @@ public class CanvasRenderCommand implements RenderCommand
 		//float[] J = project(P, rotation(a), r);
 		//line(P, J, CYAN, canvas);
 		
-		float[] J = project(P, e.getLinearMotion().getVelocity(), 1f);
+		float[] J = project(P, V, 1f);
 		line(P, J, RED, canvas);
 	}
 	

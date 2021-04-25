@@ -9,7 +9,7 @@ import com.nullpointerworks.physics.engine.ShapeType;
 public class Polygon implements Shape 
 {
 	private float area;
-	private float I;
+	private float I; // moment of inertia
 	public float[][] vertices;
 	public float[][] normals;
 	

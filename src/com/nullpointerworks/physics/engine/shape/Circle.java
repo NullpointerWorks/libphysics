@@ -27,15 +27,15 @@ public class Circle implements Shape
 	}
 	
 	@Override
-	public float getMass(float d) 
+	public float getMass(float density) 
 	{
-		return area * d;
+		return area * density;
 	}
 
 	@Override
-	public float getInertia(float d) 
+	public float getInertia(float density) 
 	{
-		return getMass(d) * radius * radius;
+		return getMass(density) * radius * radius;
 	}
 	
 	@Override

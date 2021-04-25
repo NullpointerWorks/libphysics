@@ -3,6 +3,7 @@ package com.nullpointerworks.test;
 import com.nullpointerworks.physics.GravitationConstants;
 import com.nullpointerworks.physics.engine.Composite;
 import com.nullpointerworks.physics.engine.material.LightMaterial;
+import com.nullpointerworks.physics.engine.material.Material;
 import com.nullpointerworks.physics.engine.material.StaticMaterial;
 import com.nullpointerworks.physics.engine.math.VectorMath;
 import com.nullpointerworks.physics.engine.shape.Circle;
@@ -29,7 +30,7 @@ public class MainEngine
 		RenderCommand cRenderToScreen 	= new CanvasRenderCommand(vWindow, mPhysiscSim);
 		
 		mPhysiscSim.setTargetFPS(60);
-		mPhysiscSim.setGravity( VectorMath.create(0f, -1f) , (float)GravitationConstants.EARTH );
+		mPhysiscSim.setGravity( VectorMath.create(0f, -10f) , (float)GravitationConstants.EARTH );
 		
 		mGameSim.setTargetFPS(30);
 		mGameSim.addRenderCommand(cRenderToScreen);
@@ -39,17 +40,25 @@ public class MainEngine
 		vWindow.setVisible(true);
 		
 		
-		makeCirle(mPhysiscSim);
+		
+		
+		
+		makeCirle(mPhysiscSim, 20f, 400f, 300f, new LightMaterial(), false);
+		
+		
+		makeCirle(mPhysiscSim, 100f, 250f, 100f, new StaticMaterial(), true);
+		makeCirle(mPhysiscSim, 100f, 450f, 100f, new StaticMaterial(), true);
+		
 	}
 	
-	private void makeCirle(PhysicsLoop sim) 
+	private void makeCirle(PhysicsLoop sim, float size, float x, float y, Material mat, boolean immovable) 
 	{
 		Composite circle = new Composite();
-		circle.setMaterial( new LightMaterial() );
-		circle.setShape( new Circle( 20f ) );
-		circle.getLinearMotion().setPosition( new float[] {300f,100f} );
+		circle.setMaterial( mat );
+		circle.setShape( new Circle( size ) );
+		circle.getLinearMotion().setPosition( new float[] {x, y} );
 		
-		circle.setImmovable(false);
+		circle.setImmovable(immovable);
 		sim.addComposite(circle);
 	}
 	

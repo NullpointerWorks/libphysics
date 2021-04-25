@@ -10,9 +10,9 @@ public class StaticMaterial implements Material
 	public StaticMaterial()
 	{
 		density 	= 0.0f;
-		restitution = 0.05f;
-		staticF 	= 0.6f;
-		kineticF 	= 0.4f;
+		restitution = 0.0f;
+		staticF 	= 0.5f;
+		kineticF 	= 0.3f;
 	}
 	
 	@Override
