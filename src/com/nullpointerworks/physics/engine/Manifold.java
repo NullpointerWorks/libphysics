@@ -1,16 +1,23 @@
 package com.nullpointerworks.physics.engine;
 
 import static com.nullpointerworks.physics.engine.VectorMath.create;
+import static com.nullpointerworks.physics.engine.VectorMath.normal;
+import static com.nullpointerworks.physics.engine.VectorMath.normalize;
+import static com.nullpointerworks.physics.engine.VectorMath.sub;
+import static com.nullpointerworks.physics.engine.VectorMath.dot;
+import static com.nullpointerworks.physics.engine.VectorMath.mul;
+import static com.nullpointerworks.physics.engine.VectorMath.neg;
+import static com.nullpointerworks.physics.engine.VectorMath.cross;
+import static com.nullpointerworks.physics.engine.VectorMath.project;
 
 import com.nullpointerworks.math.FloatMath;
-import com.nullpointerworks.math.vector.Vector2;
 import com.nullpointerworks.physics.engine.material.Material;
 
 public class Manifold 
 {
-	private final Vector2 vec2 = Vector2.New();
-	public Composite A,B;
+	private Composite A,B;
 	private float RESTING;
+	
 	public int contact_count;
 	public float penetration;
 	public float restitution;
@@ -21,14 +28,15 @@ public class Manifold
 	
 	public Manifold(Composite A, Composite B, float resting)
 	{
-		this.A = A; this.B = B;
+		this.A = A; 
+		this.B = B;
 		RESTING = resting;
 		normal = new float[] {0f,0f};
 		contacts = new float[][] {{0f,0f}, {0f,0f}};
 	}
 	
 	/**
-	 * Call the collision checker and solve for the given Compositions
+	 * Call the collision checker and solve for the given compositions
 	 */
 	public void solve()
 	{
@@ -49,30 +57,29 @@ public class Manifold
 		kFriction = FloatMath.pythagoras(matA.getKineticFriction(), matB.getKineticFriction());
 		
 		// for each contact point: see if its colliding, or resting on a surface
-		for (int i=0; i<contact_count; i++)
+		for (float[] contact : contacts) 
 		{
-			float[] relativeA, relativeB, relativeV, contact;
-			
 			float[] Apos = A.getLinearMotion().getPosition();
-			float[] Bpos = B.getLinearMotion().getPosition();
-			
 			float[] Avel = A.getLinearMotion().getVelocity();
+			float Aavel = A.getAngularMotion().getVelocity();
+			
+			float[] Bpos = B.getLinearMotion().getPosition();
 			float[] Bvel = B.getLinearMotion().getVelocity();
+			float Bavel = B.getAngularMotion().getVelocity();
 			
-			float Aaval = A.getAngularMotion().getVelocity();
-			float Baval = B.getAngularMotion().getVelocity();
+			float[] relativeA = sub(contact, Apos);
+			float[] relativeB = sub(contact, Bpos);
 			
-			contact = contacts[i];
-			relativeA = vec2.sub(contact, Apos);
-			relativeB = vec2.sub(contact, Bpos);
+			float[] relativeV = project(Bvel, normal(relativeB), Bavel );
+			relativeV = sub(relativeV, Avel);
+			relativeV = project(relativeV, normal(relativeA), -Aavel );
 			
-			relativeV = vec2.project(Bvel, vec2.normal(relativeB), Baval );
-			relativeV = vec2.sub(relativeV, Avel);
-			relativeV = vec2.project(relativeV, vec2.normal(relativeA), -Aaval );
-			
-			float m = vec2.dot(relativeV,relativeV); // square distance
-			
-			if (m < RESTING) restitution = 0.0f;
+			float m = dot(relativeV,relativeV); // square distance
+			if (m < RESTING) 
+			{
+				restitution = 0.0f;
+				break;
+			}
 		}
 	}
 	
@@ -93,71 +100,68 @@ public class Manifold
 		}
 		
 		// for each contact point
-		for (int i=0; i<contact_count; i++)
+		for (float[] contact : contacts)
 		{
-			float[] relativeA, relativeB, relativeV, contact, a, b;
-			float[] tangent, impulse, impulseT;
-			contact = contacts[i];
+			float[] posA = A.getLinearMotion().getPosition();
+			float[] velA = A.getLinearMotion().getVelocity();
+			float avalA = A.getAngularMotion().getVelocity();
+			
+			float[] posB = B.getLinearMotion().getPosition();
+			float[] velB = B.getLinearMotion().getVelocity();
+			float avalB = B.getAngularMotion().getVelocity();
 			
 			// recalculate relative velocities with respect to contact point
-			relativeA = vec2.sub(contact, A.getLinearMotion().getPosition());
-			relativeB = vec2.sub(contact, B.getLinearMotion().getPosition());
-			
-			a = vec2.project(A.getLinearMotion().getVelocity(), vec2.normal(relativeA), A.getAngularMotion().getVelocity() );
-			b = vec2.project(B.getLinearMotion().getVelocity(), vec2.normal(relativeB), B.getAngularMotion().getVelocity() );
-			relativeV = vec2.sub(b,a);
+			float[] relativeA = sub(contact, posA);
+			float[] relativeB = sub(contact, posB);
+			float[] a = project(velA, normal(relativeA), avalA );
+			float[] b = project(velB, normal(relativeB), avalB );
+			float[] relativeV = sub(b,a);
 			
 			// get relative velocities. if separating, skip impulse
-			float contactV = vec2.dot(relativeV, normal);
+			float contactV = dot(relativeV, normal);
 			if (contactV > 0) return;
 			
 			// get masses from objects to calculate the impulse strength
-			float RAxN = vec2.cross(relativeA, normal)[2];
-			float RBxN = vec2.cross(relativeB, normal)[2];
+			float RAxN = cross(relativeA, normal);
+			float RBxN = cross(relativeB, normal);
 			float invMassSum = inv_massA + inv_massB + (RAxN*RAxN*A.inv_inertia) + (RBxN*RBxN*B.inv_inertia);
 			
 			// get impulse scaling ===============================
-			
 			float j = -(1.0f + restitution) * contactV;
-			j /= invMassSum;
-			j /= (float)contact_count;
-			impulse = vec2.mul(normal, j);
-			
-			A.applyImpulse( vec2.neg(impulse), relativeA);
+			j /= (invMassSum * (float)contact_count);
+			float[] impulse = mul(normal, j);
+			A.applyImpulse( neg(impulse), relativeA);
 			B.applyImpulse( impulse, relativeB);
 			
-			//*
-			
 			// find friction impulse tangent =============================== 
+			float[] tangent, impulseT;
 			
 			// recalculate relative velocities
 			//a = Vector2.add(A.velocity, Vector2.normal(relativeA, A.angularVelocity) );
 			//b = Vector2.add(B.velocity, Vector2.normal(relativeB, B.angularVelocity) );
 			//relativeV = Vector2.sub(b,a);
 			
-			tangent = vec2.project(relativeV, normal, vec2.dot(relativeV, normal));
-			tangent = vec2.normalize(tangent);
+			tangent = project(relativeV, normal, dot(relativeV, normal));
+			tangent = normalize(tangent);
 			
-			float jt = -vec2.dot(relativeV, tangent);
-			jt /= invMassSum;
-			jt /= (float)contact_count;
+			float jt = -dot(relativeV, tangent);
+			jt /= (invMassSum * (float)contact_count);
 			
 			// if tangent impulse is practically 0, don't do anything 
-			if (ImpulseMath.equal(jt, 0.0f)) return;
+			if (ImpulseMath.equal(jt, 0.0f)) continue;
 				
 			// apply Coulumb's law for friction
 			if (StrictMath.abs(jt) < j*sFriction)
 			{
-				impulseT = vec2.mul(tangent, jt);
+				impulseT = mul(tangent, jt);
 			}
 			else
 			{
-				impulseT = vec2.mul(tangent, -j*kFriction);
+				impulseT = mul(tangent, -j*kFriction);
 			}
 			
-			A.applyImpulse(vec2.neg(impulseT) ,relativeA);
+			A.applyImpulse(neg(impulseT) ,relativeA);
 			B.applyImpulse(impulseT, relativeB);
-			//*/
 		}
 	}
 	
@@ -166,9 +170,6 @@ public class Manifold
 	 */
 	public void applyCorrection() 
 	{
-		boolean corrA = (!A.immovable);
-		boolean corrB = (!B.immovable);
-		
 		float imassA = A.inv_mass;
 		float imassB = B.inv_mass;
 		
@@ -178,14 +179,14 @@ public class Manifold
 		float num = FloatMath.max(penetration - ImpulseMath.ALLOWANCE, 0.0f);
 		float corr = num/den;
 		
-		if (corrA) 
+		if (!A.isImmovable()) 
 		{
-			float[] p = vec2.project(A.getLinearMotion().getPosition(), normal, -corr*imassA );
+			float[] p = project(A.getLinearMotion().getPosition(), normal, -corr*imassA );
 			A.getLinearMotion().setPosition(p);
 		}
-		if (corrB) 
+		if (!B.isImmovable()) 
 		{
-			float[] p = vec2.project(B.getLinearMotion().getPosition(), normal,  corr*imassB );
+			float[] p = project(B.getLinearMotion().getPosition(), normal,  corr*imassB );
 			B.getLinearMotion().setPosition(p);
 		}
 	}

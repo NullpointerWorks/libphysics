@@ -49,6 +49,7 @@ public class MainEngine
 		makeCirle(mPhysiscSim, 100f, 250f, 100f, new StaticMaterial(), true);
 		makeCirle(mPhysiscSim, 100f, 450f, 100f, new StaticMaterial(), true);
 		
+		//makeBox(mPhysiscSim);
 	}
 	
 	private void makeCirle(PhysicsLoop sim, float size, float x, float y, Material mat, boolean immovable) 

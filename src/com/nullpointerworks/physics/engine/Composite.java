@@ -38,7 +38,7 @@ public class Composite
 	public float[][] rotation;
 	public float[] force;
 	public float torque;
-	public boolean immovable;
+	private boolean immovable;
 	public Map<Composite,Integer> ignore;
 	
 	public Composite()
@@ -100,6 +100,11 @@ public class Composite
 		c.torque = torque;
 		
 		return c;
+	}
+
+	public boolean isImmovable() 
+	{
+		return immovable;
 	}
 	
 	// =================================================

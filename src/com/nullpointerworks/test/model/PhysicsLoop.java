@@ -46,48 +46,6 @@ public class PhysicsLoop extends Asap
 		}
 		return copy;
 	}
-	
-	/**
-	 * apply all velocities to the composite's position
-	 */
-	private void integrateVelocity(Composite b, float dt )
-	{
-		if (b.immovable) return;
-		
-		float[] P = b.getLinearMotion().getPosition();
-		float O = b.getAngularMotion().getOrientation();
-		
-		// p = v * dt
-		P = project(P, b.getLinearMotion().getVelocity(), dt);
-		O = O + b.getAngularMotion().getVelocity() * dt;
-		
-		b.getLinearMotion().setPosition(P);
-		b.getAngularMotion().setOrientation(O);
-		
-		// semi-implicit Euler
-		integrateForces(b,dt);
-	}
-	
-	/**
-	 * apply all accelerations to the composite's velocity
-	 */
-	private void integrateForces(Composite b, float dt)
-	{
-		if (b.immovable) return;
-		
-		float[] v = b.getLinearMotion().getVelocity();
-		float a = b.getAngularMotion().getVelocity();
-		
-		// v = F/m * dt
-		// w = T/Ip * dt
-		
-		v = project(v, b.force, b.inv_mass * dt);
-		v = project(v, gravityVector, dt);
-		a = a + b.torque * b.inv_inertia * dt;
-		
-		b.getLinearMotion().setVelocity(v);
-		b.getAngularMotion().setVelocity(a);
-	}
 
 	@Override
 	public synchronized void onUpdate(double dt) 
@@ -107,15 +65,17 @@ public class PhysicsLoop extends Asap
 				// check blacklist, immovability, or infinite mass
 				if (A.contains(B)) continue;
 				if (B.contains(A)) continue;
-				if (A.immovable && B.immovable) continue;
+				if (A.isImmovable() && B.isImmovable()) continue;
 				if (A.inv_mass + B.inv_mass == 0.0f) continue;
 				
 				Manifold m = new Manifold(A,B,resting);
+				m.solve();
 				
 				// if collision detected contact
-				m.solve();
 				if (m.contact_count > 0)
+				{
 					contacts.add(m);
+				}
 			}
 		}
 		
@@ -137,7 +97,6 @@ public class PhysicsLoop extends Asap
 		{
 			m.applyImpulse();
 		}
-		
 		
 		// ==== apply velocities
 		for (Composite C : bodies)
@@ -174,5 +133,47 @@ public class PhysicsLoop extends Asap
 		contacts.clear();
 		bodies = null;
 		contacts = null;
+	}
+	
+	/**
+	 * apply all velocities to the composite's position
+	 */
+	private void integrateVelocity(Composite b, float dt)
+	{
+		if (b.isImmovable()) return;
+		
+		float[] P 	= b.getLinearMotion().getPosition();
+		float O 	= b.getAngularMotion().getOrientation();
+		
+		// p = v * dt
+		P = project(P, b.getLinearMotion().getVelocity(), dt);
+		O = O + b.getAngularMotion().getVelocity() * dt;
+		
+		b.getLinearMotion().setPosition(P);
+		b.getAngularMotion().setOrientation(O);
+		
+		// semi-implicit Euler
+		integrateForces(b,dt);
+	}
+	
+	/**
+	 * apply all accelerations to the composite's velocity
+	 */
+	private void integrateForces(Composite b, float dt)
+	{
+		if (b.isImmovable()) return;
+		
+		float[] v 	= b.getLinearMotion().getVelocity();
+		float a 	= b.getAngularMotion().getVelocity();
+		
+		// v = F/m * dt
+		// w = T/Ip * dt
+		
+		v = project(v, b.force, b.inv_mass * dt);
+		v = project(v, gravityVector, dt);
+		a = a + b.torque * b.inv_inertia * dt;
+		
+		b.getLinearMotion().setVelocity(v);
+		b.getAngularMotion().setVelocity(a);
 	}
 }
