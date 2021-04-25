@@ -1,5 +1,8 @@
 package com.nullpointerworks.physics.engine.collision;
 
+import static com.nullpointerworks.physics.engine.MatrixMath.rotation;
+import static com.nullpointerworks.physics.engine.MatrixMath.transform;
+
 import com.nullpointerworks.physics.engine.CollisionSolver;
 import com.nullpointerworks.physics.engine.Composite;
 import com.nullpointerworks.physics.engine.ImpulseMath;
@@ -17,7 +20,7 @@ public class CirclePolygon implements CollisionSolver
 		Circle shapeA 	= (Circle)A.getShape();
 		Polygon shapeB 	= (Polygon)B.getShape();
 		
-		float[][] rotation 	= B.rotation;
+		float[][] rotation 	= rotation( B.getAngularMotion().getOrientation() );
 		float[][] transpose = MatrixMath.transpose(rotation);
 		
 		float[][] verticesB = shapeB.vertices;
@@ -33,7 +36,7 @@ public class CirclePolygon implements CollisionSolver
 		m.contact_count = 0;
 		
 		// move circle center vector to the polygon's model space
-		float[] center = MatrixMath.transform(transpose, VectorMath.sub(Aposition, Bposition) );
+		float[] center = transform(transpose, VectorMath.sub(Aposition, Bposition) );
 		
 		// find the face with the penetration penetration
 		// normals must be normalized

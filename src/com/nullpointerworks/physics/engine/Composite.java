@@ -1,6 +1,5 @@
 package com.nullpointerworks.physics.engine;
 
-import static com.nullpointerworks.physics.engine.MatrixMath.rotation;
 import static com.nullpointerworks.physics.engine.VectorMath.add;
 import static com.nullpointerworks.physics.engine.VectorMath.copy;
 import static com.nullpointerworks.physics.engine.VectorMath.create;
@@ -16,9 +15,6 @@ import com.nullpointerworks.physics.engine.motion.LinearMotion;
 
 public class Composite
 {
-	/*
-	 * composition
-	 */
 	private Material material;
 	private Shape shape;
 	private LinearMotion lmotion;
@@ -35,25 +31,23 @@ public class Composite
 	/*
 	 * other data
 	 */
-	public float[][] rotation;
 	public float[] force;
 	public float torque;
 	private boolean immovable;
-	public Map<Composite,Integer> ignore;
+	private Map<Composite,Integer> ignore;
 	
 	public Composite()
 	{
 		material 	= null;
 		shape 		= null;
-		lmotion = new LinearMotion();
-		amotion = new AngularMotion();
+		lmotion 	= new LinearMotion();
+		amotion 	= new AngularMotion();
 		
+		ignore 		= new HashMap<Composite,Integer>();
+		immovable 	= false;
 		
 		force 		= create(0f, 0f); // gets reset per update
 		torque 		= 0f; // gets reset per update
-		rotation 	= rotation(0f);
-		ignore 		= new HashMap<Composite,Integer>();
-		immovable 	= false;
 	}
 	
 	/**
@@ -95,13 +89,16 @@ public class Composite
 		c.immovable = immovable;
 		c.ignore = ignore;
 		
-		c.rotation = rotation(amotion.getOrientation());
 		c.force = copy(force);
 		c.torque = torque;
 		
 		return c;
 	}
-
+	
+	/**
+	 * 
+	 * @return
+	 */
 	public boolean isImmovable() 
 	{
 		return immovable;

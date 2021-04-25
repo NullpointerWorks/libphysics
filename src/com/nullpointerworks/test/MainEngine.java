@@ -43,13 +43,11 @@ public class MainEngine
 		
 		
 		
-		makeCirle(mPhysiscSim, 20f, 400f, 300f, new LightMaterial(), false);
-		
-		
+		makeCirle(mPhysiscSim, 20f, 400f, 500f, new LightMaterial(), false);
 		makeCirle(mPhysiscSim, 100f, 250f, 100f, new StaticMaterial(), true);
 		makeCirle(mPhysiscSim, 100f, 450f, 100f, new StaticMaterial(), true);
 		
-		//makeBox(mPhysiscSim);
+		//makeImmovableBox(mPhysiscSim, 400f, 300f);
 	}
 	
 	private void makeCirle(PhysicsLoop sim, float size, float x, float y, Material mat, boolean immovable) 
@@ -63,15 +61,15 @@ public class MainEngine
 		sim.addComposite(circle);
 	}
 	
-	private void makeBox(PhysicsLoop sim) 
+	private void makeImmovableBox(PhysicsLoop sim, float x, float y) 
 	{
 		
 		float[][] vBox = 
 		{
-			{  0f,  0f},
-			{100f,  0f},
-			{100f, 20f},
-			{  0f, 20f}	
+			{-100f+x, 30f+y},
+			{ 100f+x, 30f+y},
+			{ 100f+x,-30f+y},
+			{-100f+x,-30f+y}
 		};
 		
 		float[][] nBox = 
@@ -85,6 +83,7 @@ public class MainEngine
 		Composite immovableBox = new Composite();
 		immovableBox.setShape( new Polygon(vBox, nBox) );
 		immovableBox.setMaterial( new StaticMaterial() );
+		immovableBox.getLinearMotion().setPosition( new float[] {x,y} );
 		immovableBox.setImmovable(true);
 		
 		sim.addComposite(immovableBox);

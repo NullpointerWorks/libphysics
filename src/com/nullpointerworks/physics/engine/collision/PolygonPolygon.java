@@ -1,6 +1,7 @@
 package com.nullpointerworks.physics.engine.collision;
 
 import static com.nullpointerworks.physics.engine.ImpulseMath.gt;
+import static com.nullpointerworks.physics.engine.MatrixMath.rotation;
 import static com.nullpointerworks.physics.engine.MatrixMath.transform;
 import static com.nullpointerworks.physics.engine.MatrixMath.transpose;
 import static com.nullpointerworks.physics.engine.VectorMath.add;
@@ -58,7 +59,7 @@ public class PolygonPolygon implements CollisionSolver
 		IncidentFace(incFace, R, I, reference_index);
 		
 		float[][] refVertices	= shapeR.vertices;
-		float[][] refMatrix 	= R.rotation;
+		float[][] refMatrix 	= rotation( R.getAngularMotion().getOrientation() );
 		int l = refVertices.length;
 		
 		// get vertices from the reference polygon
@@ -139,8 +140,8 @@ public class PolygonPolygon implements CollisionSolver
 		float[][] verticesB	= shapeB.vertices;
 		float[][] normals 	= shapeA.normals;
 		
-		float[][] rotationA = A.rotation;
-		float[][] rotationB = B.rotation;
+		float[][] rotationA = rotation( A.getAngularMotion().getOrientation() );
+		float[][] rotationB = rotation( B.getAngularMotion().getOrientation() );
 		float[][] trnsposeB = transpose(rotationB);
 
 		float[] posA = Aposition;
@@ -206,10 +207,10 @@ public class PolygonPolygon implements CollisionSolver
 		Polygon refPoly = (Polygon)R.getShape();
 		Polygon incPoly = (Polygon)I.getShape();
 		
-		float[][] refMatrix 	= R.rotation;
+		float[][] refMatrix 	= rotation( R.getAngularMotion().getOrientation() );
 		float[] ref_normal 		= refPoly.normals[index];
 		
-		float[][] incMatrix 	= I.rotation;
+		float[][] incMatrix 	= rotation( I.getAngularMotion().getOrientation() );
 		float[] incPosition 	= I.getLinearMotion().getPosition();
 		float[][] incTranspose 	= transpose(incMatrix);
 		

@@ -10,6 +10,7 @@ import com.nullpointerworks.core.buffer.IntBuffer;
 import com.nullpointerworks.physics.engine.Composite;
 import com.nullpointerworks.physics.engine.ShapeType;
 import com.nullpointerworks.physics.engine.shape.Circle;
+import com.nullpointerworks.physics.engine.shape.Polygon;
 import com.nullpointerworks.test.model.PhysicsLoop;
 import com.nullpointerworks.test.view.GameView;
 
@@ -52,7 +53,7 @@ public class CanvasRenderCommand implements RenderCommand
 			switch(st)
 			{
 			case Circle: drawCircle(c, canvas); break;
-			case Poly: break;
+			case Poly: drawPolygon(c, canvas); break;
 			}
 		}
 		
@@ -75,8 +76,22 @@ public class CanvasRenderCommand implements RenderCommand
 		//float[] J = project(P, rotation(a), r);
 		//line(P, J, CYAN, canvas);
 		
-		float[] J = project(P, V, 1f);
-		line(P, J, RED, canvas);
+		//float[] J = project(P, V, 1f);
+		//line(P, J, RED, canvas);
+	}
+	
+	private void drawPolygon(Composite c, IntBuffer canvas)
+	{
+		Polygon p = (Polygon)c.getShape();
+		float[][] v = p.vertices;
+		
+		float[] b1 = v[0];
+		for (int i=1,l=v.length; i<=l; i++)
+		{
+			float[] b2 = v[i%l];
+			line(b1,b2,WHITE,canvas);
+			b1 = b2;
+		}
 	}
 	
 	private void line(float[] p, float[] j, int c, IntBuffer s) 

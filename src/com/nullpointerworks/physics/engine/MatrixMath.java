@@ -25,8 +25,8 @@ public class MatrixMath
 	{
 		float[] m1 = m[0];
 		float[] m2 = m[1];
-		float vx = m1[0]*v[0] + m1[1]*v[1] + m1[2];
-		float vy = m2[0]*v[0] + m2[1]*v[1] + m2[2];
+		float vx = m1[0]*v[0] + m1[1]*v[1];
+		float vy = m2[0]*v[0] + m2[1]*v[1];
 		return new float[] {vx,vy};
 	}
 	

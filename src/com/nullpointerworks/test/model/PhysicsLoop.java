@@ -16,14 +16,14 @@ public class PhysicsLoop extends Asap
 {
 	private List<Composite> bodies;
 	private List<Manifold> contacts;
+	
 	private float[] gravityVector;
 	private int iterations = 10;
 	
 	public PhysicsLoop()
 	{
-		bodies 		= new Vector<Composite>();
-		contacts 	= new ArrayList<Manifold>();
-		
+		bodies = new Vector<Composite>();
+		contacts = new ArrayList<Manifold>();
 		gravityVector = new float[] {0f, 9.8f};
 	}
 	
@@ -46,7 +46,9 @@ public class PhysicsLoop extends Asap
 		}
 		return copy;
 	}
-
+	
+	// =======================================================================================
+	
 	@Override
 	public synchronized void onUpdate(double dt) 
 	{
@@ -65,6 +67,7 @@ public class PhysicsLoop extends Asap
 				// check blacklist, immovability, or infinite mass
 				if (A.contains(B)) continue;
 				if (B.contains(A)) continue;
+				
 				if (A.isImmovable() && B.isImmovable()) continue;
 				if (A.inv_mass + B.inv_mass == 0.0f) continue;
 				
