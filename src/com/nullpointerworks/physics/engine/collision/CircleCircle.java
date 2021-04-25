@@ -17,8 +17,8 @@ public class CircleCircle implements CollisionSolver
 		float radiusA = ((Circle)A.getShape()).getRadius();
 		float radiusB = ((Circle)B.getShape()).getRadius();
 
-		float[] posA = A.position;
-		float[] posB = B.position;
+		float[] posA = A.getLinearMotion().getPosition();
+		float[] posB = B.getLinearMotion().getPosition();
 		
 		// find distances between points
 		float[] tangent = VectorMath.sub(posB, posA);
@@ -37,7 +37,7 @@ public class CircleCircle implements CollisionSolver
 		{
 			// drive the two circles away in some direction.
 			m.contact_count = 1;
-			m.contacts[0] 	= VectorMath.copy(A.position);
+			m.contacts[0] 	= A.getLinearMotion().getPosition();
 			m.normal 		= VectorMath.create(1f, 0f);
 			m.penetration 	= radiusA;
 		}

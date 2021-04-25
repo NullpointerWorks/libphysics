@@ -3,10 +3,21 @@ package com.nullpointerworks.physics.engine.collision;
 import com.nullpointerworks.physics.engine.CollisionSolver;
 import com.nullpointerworks.physics.engine.Composite;
 import com.nullpointerworks.physics.engine.Manifold;
-import com.nullpointerworks.physics.engine.math.ImpulseMath;
-import com.nullpointerworks.physics.engine.math.MatrixMath;
-import com.nullpointerworks.physics.engine.math.VectorMath;
 import com.nullpointerworks.physics.engine.shape.Polygon;
+
+import static com.nullpointerworks.physics.engine.math.ImpulseMath.gt;
+
+import static com.nullpointerworks.physics.engine.math.MatrixMath.transform;
+import static com.nullpointerworks.physics.engine.math.MatrixMath.transpose;
+
+import static com.nullpointerworks.physics.engine.math.VectorMath.add;
+import static com.nullpointerworks.physics.engine.math.VectorMath.sub;
+import static com.nullpointerworks.physics.engine.math.VectorMath.dot;
+import static com.nullpointerworks.physics.engine.math.VectorMath.mul;
+import static com.nullpointerworks.physics.engine.math.VectorMath.neg;
+import static com.nullpointerworks.physics.engine.math.VectorMath.copy;
+import static com.nullpointerworks.physics.engine.math.VectorMath.normalize;
+import static com.nullpointerworks.physics.engine.math.VectorMath.normal;
 
 public class PolygonPolygon implements CollisionSolver 
 {
@@ -28,7 +39,7 @@ public class PolygonPolygon implements CollisionSolver
 		if (penetrationB >= 0.0f) return;
 		
 		// find the face of incidence
-		if (ImpulseMath.gt(penetrationA, penetrationB))
+		if (gt(penetrationA, penetrationB))
 		{
 			solve(m,A,B, face_a[0],false);
 		}
@@ -44,7 +55,7 @@ public class PolygonPolygon implements CollisionSolver
 	public void solve(Manifold m, Composite R, Composite I, int reference_index, boolean handedness)
 	{
 		Polygon shapeR 	= (Polygon)R.getShape();
-		
+		float[] Rposition = R.getLinearMotion().getPosition();
 		float[][] incFace = new float[2][];
 		IncidentFace(incFace, R, I, reference_index);
 		
@@ -57,22 +68,22 @@ public class PolygonPolygon implements CollisionSolver
 		float[] v2 = refVertices[(reference_index+1)%l ];
 		
 		// translate to world space
-		v1 = MatrixMath.transform(refMatrix, v1);
-		v2 = MatrixMath.transform(refMatrix, v2);
-		v1 = VectorMath.add(v1, R.position);
-		v2 = VectorMath.add(v2, R.position);
+		v1 = transform(refMatrix, v1);
+		v2 = transform(refMatrix, v2);
+		v1 = add(v1, Rposition);
+		v2 = add(v2, Rposition);
 		
 		// get normal and tangent of the world-space face
-		float[] plane_normal 	= VectorMath.sub(v2, v1);
-		plane_normal 			= VectorMath.normalize(plane_normal);
-		float[] face_normal 	= VectorMath.normal(plane_normal, -1f);
+		float[] plane_normal 	= sub(v2, v1);
+		plane_normal 			= normalize(plane_normal);
+		float[] face_normal 	= normal(plane_normal, -1f);
 		
 		// find collision normal
-		float refC 		= VectorMath.dot(face_normal, v1);
-		float neg_side 	= -VectorMath.dot(plane_normal, v1);
-		float pos_side 	= VectorMath.dot(plane_normal, v2);
+		float refC 		= dot(face_normal, v1);
+		float neg_side 	= -dot(plane_normal, v1);
+		float pos_side 	= dot(plane_normal, v2);
 		
-		if ( clip(VectorMath.neg(plane_normal), neg_side, incFace ) < 2 ) 
+		if ( clip(neg(plane_normal), neg_side, incFace ) < 2 ) 
 			return;
 		
 		if ( clip(plane_normal, pos_side, incFace ) < 2 ) 
@@ -82,25 +93,25 @@ public class PolygonPolygon implements CollisionSolver
 		m.normal = face_normal;
 		if (handedness)
 		{
-			m.normal = VectorMath.neg(m.normal);
+			m.normal = neg(m.normal);
 		}
 		
 		// find separation
 		int cp = 0;
-		float separation1 = VectorMath.dot(face_normal, incFace[0]) - refC;
-		float separation2 = VectorMath.dot(face_normal, incFace[1]) - refC;
+		float separation1 = dot(face_normal, incFace[0]) - refC;
+		float separation2 = dot(face_normal, incFace[1]) - refC;
 		
 		m.penetration = 0.0f;
 		if (separation1 <= 0.0f)
 		{
-			m.contacts[cp] = VectorMath.copy(incFace[0]);
+			m.contacts[cp] = copy(incFace[0]);
 			m.penetration += -separation1;
 			cp++;
 		}
 		
 		if (separation2 <= 0.0f)
 		{
-			m.contacts[cp] = VectorMath.copy(incFace[1]);
+			m.contacts[cp] = copy(incFace[1]);
 			m.penetration += -separation2;
 			cp++;
 			
@@ -119,6 +130,9 @@ public class PolygonPolygon implements CollisionSolver
 	{
 		Polygon shapeA 	= (Polygon)A.getShape();
 		Polygon shapeB 	= (Polygon)B.getShape();
+
+		float[] Aposition = A.getLinearMotion().getPosition();
+		float[] Bposition = B.getLinearMotion().getPosition();
 		
 		float best_dist = -Float.MAX_VALUE;
 		int best_index 	= 0;
@@ -129,10 +143,10 @@ public class PolygonPolygon implements CollisionSolver
 		
 		float[][] rotationA = A.rotation;
 		float[][] rotationB = B.rotation;
-		float[][] trnsposeB = MatrixMath.transpose(rotationB);
+		float[][] trnsposeB = transpose(rotationB);
 
-		float[] posA = A.position;
-		float[] posB = B.position;
+		float[] posA = Aposition;
+		float[] posB = Bposition;
 		
 		for (int i=0,l=verticesA.length; i<l; i++)
 		{
@@ -140,18 +154,18 @@ public class PolygonPolygon implements CollisionSolver
 			float[] normal = normals[i];
 			
 			// move normal to polygon B's model space
-			float[] nw = MatrixMath.transform(rotationA, normal);
-			float[] n = MatrixMath.transform(trnsposeB, nw);
+			float[] nw = transform(rotationA, normal);
+			float[] n = transform(trnsposeB, nw);
 			
 			// move vertex from model space A to model space B
-			float[] v = MatrixMath.transform(rotationA, vertex);
-			v = VectorMath.add(v, posA);
-			v = VectorMath.sub(v, posB);
-			v = MatrixMath.transform(trnsposeB, v);
+			float[] v = transform(rotationA, vertex);
+			v = add(v, posA);
+			v = sub(v, posB);
+			v = transform(trnsposeB, v);
 			
 			// get support
-			float[] s = support(verticesB, VectorMath.neg(n) );
-			float dist = VectorMath.dot(n, VectorMath.sub(s, v) );
+			float[] s = support(verticesB, neg(n) );
+			float dist = dot(n, sub(s, v) );
 			if (dist > best_dist)
 			{
 				best_dist = dist;
@@ -175,7 +189,7 @@ public class PolygonPolygon implements CollisionSolver
 		for (int i=0, l=vertices.length; i<l; i++)
 		{
 			float[] v = vertices[i];
-			float proj = VectorMath.dot(v, dir);
+			float proj = dot(v, dir);
 			
 			if (proj > bestProj)
 			{
@@ -196,14 +210,14 @@ public class PolygonPolygon implements CollisionSolver
 		
 		float[][] refMatrix 	= R.rotation;
 		float[] ref_normal 		= refPoly.normals[index];
-
+		
 		float[][] incMatrix 	= I.rotation;
-		float[] incPosition 	= I.position;
-		float[][] incTranspose 	= MatrixMath.transpose(incMatrix);
+		float[] incPosition 	= I.getLinearMotion().getPosition();
+		float[][] incTranspose 	= transpose(incMatrix);
 		
 		// transform normal from model-space A to B
-		ref_normal = MatrixMath.transform(refMatrix, ref_normal);
-		ref_normal = MatrixMath.transform(incTranspose, ref_normal);
+		ref_normal = transform(refMatrix, ref_normal);
+		ref_normal = transform(incTranspose, ref_normal);
 		
 		// find most anti-normal face on incident polygon
 		int incident_face = 0;
@@ -217,7 +231,7 @@ public class PolygonPolygon implements CollisionSolver
 		{
 			float[] norm = normals[i];
 			
-			float dot = VectorMath.dot(ref_normal, norm);
+			float dot = dot(ref_normal, norm);
 			if (dot < min_dot)
 			{
 				min_dot = dot;
@@ -225,13 +239,13 @@ public class PolygonPolygon implements CollisionSolver
 			}
 		}
 		
-		v[0] = MatrixMath.transform(incMatrix, vertices[incident_face] );
-		v[0] = VectorMath.add(v[0], incPosition);
+		v[0] = transform(incMatrix, vertices[incident_face] );
+		v[0] = add(v[0], incPosition);
 		
 		incident_face = (incident_face+1)%l;
 		
-		v[1] = MatrixMath.transform(incMatrix, vertices[incident_face] );
-		v[1] = VectorMath.add(v[1], incPosition);
+		v[1] = transform(incMatrix, vertices[incident_face] );
+		v[1] = add(v[1], incPosition);
 	}
 	
 	/*
@@ -242,23 +256,23 @@ public class PolygonPolygon implements CollisionSolver
 		int sp = 0;
 		float[][] out = 
 		{
-			VectorMath.copy(face[0]), 
-			VectorMath.copy(face[1])
+			copy(face[0]), 
+			copy(face[1])
 		};
 		
-		float d1 = VectorMath.dot(n, face[0]) - c;
-		float d2 = VectorMath.dot(n, face[1]) - c;
+		float d1 = dot(n, face[0]) - c;
+		float d2 = dot(n, face[1]) - c;
 
-		if (d1 <= 0.0f) out[sp++] = VectorMath.copy(face[0]);
-		if (d2 <= 0.0f) out[sp++] = VectorMath.copy(face[1]);
+		if (d1 <= 0.0f) out[sp++] = copy(face[0]);
+		if (d2 <= 0.0f) out[sp++] = copy(face[1]);
 		
 		// xor, if one is negative
 		if (d1*d2 < 0.0f)
 		{
 			float lambda = d1 / (d1 - d2);
-			float[] A = VectorMath.sub(face[1], face[0]);
-			A = VectorMath.mul(A, lambda);
-			out[sp++] = VectorMath.add(A ,face[0]);
+			float[] A = sub(face[1], face[0]);
+			A = mul(A, lambda);
+			out[sp++] = add(A ,face[0]);
 		}
 		face[0] = out[0];
 		face[1] = out[1];

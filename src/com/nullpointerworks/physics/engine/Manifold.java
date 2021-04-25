@@ -78,8 +78,7 @@ public class Manifold
 			
 			float m = vec2.dot(relativeV,relativeV); // square distance
 			
-			if (m < ImpulseMath.RESTING) 
-				restitution = 0.0f;
+			if (m < ImpulseMath.RESTING) restitution = 0.0f;
 		}
 	}
 	
@@ -107,11 +106,11 @@ public class Manifold
 			contact = contacts[i];
 			
 			// recalculate relative velocities with respect to contact point
-			relativeA = vec2.sub(contact, A.position);
-			relativeB = vec2.sub(contact, B.position);
+			relativeA = vec2.sub(contact, A.getLinearMotion().getPosition());
+			relativeB = vec2.sub(contact, B.getLinearMotion().getPosition());
 			
-			a = vec2.project(A.velocity, vec2.normal(relativeA), A.angularVelocity );
-			b = vec2.project(B.velocity, vec2.normal(relativeB), B.angularVelocity );
+			a = vec2.project(A.getLinearMotion().getVelocity(), vec2.normal(relativeA), A.getAngularMotion().getVelocity() );
+			b = vec2.project(B.getLinearMotion().getVelocity(), vec2.normal(relativeB), B.getAngularMotion().getVelocity() );
 			relativeV = vec2.sub(b,a);
 			
 			// get relative velocities. if separating, skip impulse
@@ -185,7 +184,15 @@ public class Manifold
 		float num = FloatMath.max(penetration - ImpulseMath.ALLOWANCE, 0.0f);
 		float corr = num/den;
 		
-		if (corrA) A.position = vec2.project(A.position, normal, -corr*imassA );
-		if (corrB) B.position = vec2.project(B.position, normal,  corr*imassB );
+		if (corrA) 
+		{
+			float[] p = vec2.project(A.getLinearMotion().getPosition(), normal, -corr*imassA );
+			A.getLinearMotion().setPosition(p);
+		}
+		if (corrB) 
+		{
+			float[] p = vec2.project(B.getLinearMotion().getPosition(), normal,  corr*imassB );
+			B.getLinearMotion().setPosition(p);
+		}
 	}
 }

@@ -26,11 +26,14 @@ public class CirclePolygon implements CollisionSolver
 		float[] norm,vc;
 		float radiusA = shapeA.getRadius(), dist;
 		int v_count = verticesB.length;
+
+		float[] Aposition = A.getLinearMotion().getPosition();
+		float[] Bposition = B.getLinearMotion().getPosition();
 		
 		m.contact_count = 0;
 		
 		// move circle center vector to the polygon's model space
-		float[] center = MatrixMath.transform(transpose, VectorMath.sub(A.position, B.position) );
+		float[] center = MatrixMath.transform(transpose, VectorMath.sub(Aposition, Bposition) );
 		
 		// find the face with the penetration penetration
 		// normals must be normalized
@@ -57,7 +60,7 @@ public class CirclePolygon implements CollisionSolver
 			m.normal = VectorMath.neg(norm);
 			m.contact_count = 1;
 			m.penetration = radiusA;
-			m.contacts[0] = VectorMath.project(A.position, m.normal, radiusA);
+			m.contacts[0] = VectorMath.project(Aposition, m.normal, radiusA);
 			return;
 		}
 		
@@ -89,7 +92,7 @@ public class CirclePolygon implements CollisionSolver
 			
 			// rotate vertex to polygon world space
 			float[] v = MatrixMath.transform(rotation, v1);
-			m.contacts[0] = VectorMath.add(B.position, v);
+			m.contacts[0] = VectorMath.add(Bposition, v);
 			return;
 		}
 		
@@ -107,7 +110,7 @@ public class CirclePolygon implements CollisionSolver
 			
 			// rotate vertex to polygon world space
 			float[] v = MatrixMath.transform(rotation, v2);
-			m.contacts[0] = VectorMath.add(B.position, v);
+			m.contacts[0] = VectorMath.add(Bposition, v);
 			return;
 		}
 		
@@ -121,6 +124,6 @@ public class CirclePolygon implements CollisionSolver
 		norm = MatrixMath.transform(rotation, n );
 		norm = VectorMath.neg(norm);
 		m.normal = VectorMath.normalize(norm);
-		m.contacts[0] = VectorMath.project(A.position, m.normal, radiusA);
+		m.contacts[0] = VectorMath.project(Aposition, m.normal, radiusA);
 	}
 }

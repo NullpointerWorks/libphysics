@@ -49,7 +49,7 @@ public class MainEngine
 		circle.setShape( new Circle( 20f ) );
 		circle.getLinearMotion().setPosition( new float[] {300f,100f} );
 		
-		circle.setImmovable(true);
+		circle.setImmovable(false);
 		sim.addComposite(circle);
 	}
 	

@@ -12,7 +12,6 @@ import com.nullpointerworks.test.model.PhysicsLoop;
 import com.nullpointerworks.test.view.GameView;
 
 import static com.nullpointerworks.physics.engine.math.VectorMath.project;
-import static com.nullpointerworks.physics.engine.math.VectorMath.rotation;
 
 public class CanvasRenderCommand implements RenderCommand
 {
@@ -24,17 +23,19 @@ public class CanvasRenderCommand implements RenderCommand
 	private int BLACK;
 	private int WHITE;
 	private int CYAN;
+	private int RED;
 	
 	public CanvasRenderCommand(GameView v, PhysicsLoop s)
 	{
 		vWindow = v;
 		mPhysiscSim = s;
-		
 		canvas = v.getCanvas();
+		
 		color = Colorizer.getColorizer( ColorFormat.RGB );
 		BLACK = color.toInt(0,0,0);
 		WHITE = color.toInt(255,255,255);
 		CYAN = color.toInt(0,255,255);
+		RED = color.toInt(255,0,0);
 	}
 	
 	@Override
@@ -59,17 +60,19 @@ public class CanvasRenderCommand implements RenderCommand
 	private void drawCircle(Composite e, IntBuffer canvas)
 	{
 		Circle s 	= (Circle)e.getShape();
-		
 		float r 	= s.getRadius();
-		float[] P 	= e.position;
-		circle(P, r, CYAN, canvas);
+		float[] P 	= e.getLinearMotion().getPosition();
+		
+		
+		
+		circle(P, r, WHITE, canvas);
 		
 		//float a 	= e.orientation;
 		//float[] J = project(P, rotation(a), r);
 		//line(P, J, CYAN, canvas);
 		
-		float[] J = project(P, e.velocity, 1f);
-		line(P, J, CYAN, canvas);
+		float[] J = project(P, e.getLinearMotion().getVelocity(), 1f);
+		line(P, J, RED, canvas);
 	}
 	
 	private void line(float[] p, float[] j, int c, IntBuffer s) 

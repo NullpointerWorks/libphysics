@@ -54,15 +54,15 @@ public class PhysicsLoop extends Asap
 	{
 		if (b.immovable) return;
 		
-		float[] P = b.position;
-		float O = b.orientation;
+		float[] P = b.getLinearMotion().getPosition();
+		float O = b.getAngularMotion().getOrientation();
 		
 		// p = v * dt
-		P = project(P, b.velocity, dt);
-		O = O + b.angularVelocity * dt;
+		P = project(P, b.getLinearMotion().getVelocity(), dt);
+		O = O + b.getAngularMotion().getVelocity() * dt;
 		
-		b.position = P;
-		b.setOrientation(O);
+		b.getLinearMotion().setPosition(P);
+		b.getAngularMotion().setOrientation(O);
 		
 		// semi-implicit Euler
 		integrateForces(b,dt);
@@ -75,8 +75,8 @@ public class PhysicsLoop extends Asap
 	{
 		if (b.immovable) return;
 		
-		float[] v = b.velocity;
-		float a = b.angularVelocity;
+		float[] v = b.getLinearMotion().getVelocity();
+		float a = b.getAngularMotion().getVelocity();
 		
 		// v = F/m * dt
 		// w = T/Ip * dt
@@ -85,8 +85,8 @@ public class PhysicsLoop extends Asap
 		v = project(v, gravityVector, dt);
 		a = a + b.torque * b.inv_inertia * dt;
 		
-		b.velocity = v;
-		b.angularVelocity = a;
+		b.getLinearMotion().setVelocity(v);
+		b.getAngularMotion().setVelocity(a);
 	}
 
 	@Override
