@@ -2,7 +2,8 @@ package com.nullpointerworks.test;
 
 import com.nullpointerworks.physics.GravitationConstants;
 import com.nullpointerworks.physics.engine.Composite;
-import com.nullpointerworks.physics.engine.MaterialFactory;
+import com.nullpointerworks.physics.engine.material.LightMaterial;
+import com.nullpointerworks.physics.engine.material.StaticMaterial;
 import com.nullpointerworks.physics.engine.math.VectorMath;
 import com.nullpointerworks.physics.engine.shape.Circle;
 import com.nullpointerworks.physics.engine.shape.Polygon;
@@ -44,11 +45,11 @@ public class MainEngine
 	private void makeCirle(PhysicsLoop sim) 
 	{
 		Composite circle = new Composite();
-		circle.setMaterial( MaterialFactory.Static() );
+		circle.setMaterial( new LightMaterial() );
 		circle.setShape( new Circle( 20f ) );
-		circle.setImmovable(true);
+		circle.getLinearMotion().setPosition( new float[] {300f,100f} );
 		
-		circle.position = new float[] {300f,100f};
+		circle.setImmovable(true);
 		sim.addComposite(circle);
 	}
 	
@@ -73,7 +74,7 @@ public class MainEngine
 		
 		Composite immovableBox = new Composite();
 		immovableBox.setShape( new Polygon(vBox, nBox) );
-		immovableBox.setMaterial( MaterialFactory.Static() );
+		immovableBox.setMaterial( new StaticMaterial() );
 
 		sim.addComposite(immovableBox);
 	}

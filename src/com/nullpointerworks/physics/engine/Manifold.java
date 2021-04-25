@@ -5,6 +5,8 @@ import com.nullpointerworks.math.vector.Vector2;
 import com.nullpointerworks.physics.engine.material.Material;
 import com.nullpointerworks.physics.engine.math.ImpulseMath;
 
+import static com.nullpointerworks.physics.engine.math.VectorMath.create;
+
 public class Manifold 
 {
 	public static Manifold New(Composite A, Composite B) 
@@ -57,13 +59,22 @@ public class Manifold
 		{
 			float[] relativeA, relativeB, relativeV, contact;
 			
-			contact = contacts[i];
-			relativeA = vec2.sub(contact, A.position);
-			relativeB = vec2.sub(contact, B.position);
+			float[] Apos = A.getLinearMotion().getPosition();
+			float[] Bpos = B.getLinearMotion().getPosition();
 			
-			relativeV = vec2.project(B.velocity, vec2.normal(relativeB), B.angularVelocity );
-			relativeV = vec2.sub(relativeV, A.velocity);
-			relativeV = vec2.project(relativeV, vec2.normal(relativeA), -A.angularVelocity );
+			float[] Avel = A.getLinearMotion().getVelocity();
+			float[] Bvel = B.getLinearMotion().getVelocity();
+			
+			float Aaval = A.getAngularMotion().getVelocity();
+			float Baval = B.getAngularMotion().getVelocity();
+			
+			contact = contacts[i];
+			relativeA = vec2.sub(contact, Apos);
+			relativeB = vec2.sub(contact, Bpos);
+			
+			relativeV = vec2.project(Bvel, vec2.normal(relativeB), Baval );
+			relativeV = vec2.sub(relativeV, Avel);
+			relativeV = vec2.project(relativeV, vec2.normal(relativeA), -Aaval );
 			
 			float m = vec2.dot(relativeV,relativeV); // square distance
 			
@@ -83,8 +94,8 @@ public class Manifold
 		// check if the masses are infinite. Skip moving by impulse
 		if (ImpulseMath.equal(inv_massA + inv_massB, 0.0f))
 		{
-			A.velocity = vec2.New(0f, 0f);
-			B.velocity = vec2.New(0f, 0f);
+			A.getLinearMotion().setVelocity( create(0f,0f) );
+			B.getLinearMotion().setVelocity( create(0f,0f) );
 			return;
 		}
 		
@@ -158,8 +169,7 @@ public class Manifold
 	}
 	
 	/**
-	 * due to floating point precision errors,<br>
-	 * the object location may be off a little
+	 * due to floating point precision errors, the object position may be off a little
 	 */
 	public void applyCorrection() 
 	{

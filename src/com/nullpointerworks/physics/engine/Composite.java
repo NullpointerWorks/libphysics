@@ -4,6 +4,9 @@ import java.util.HashMap;
 import java.util.Map;
 
 import com.nullpointerworks.physics.engine.material.Material;
+import com.nullpointerworks.physics.engine.material.StaticMaterial;
+import com.nullpointerworks.physics.engine.motion.AngularMotion;
+import com.nullpointerworks.physics.engine.motion.LinearMotion;
 
 import static com.nullpointerworks.physics.engine.math.MatrixMath.rotation;
 import static com.nullpointerworks.physics.engine.math.VectorMath.create;
@@ -19,18 +22,8 @@ public class Composite
 	 */
 	private Material material;
 	private Shape shape;
-	
-	/*
-	 * location
-	 */
-	public float[] position;
-	public float[] velocity;
-	
-	/*
-	 * angle
-	 */
-	public float orientation;
-	public float angularVelocity;
+	private LinearMotion lmotion;
+	private AngularMotion amotion;
 	
 	/*
 	 * mass
@@ -51,61 +44,42 @@ public class Composite
 	
 	public Composite()
 	{
-		position 	= create(0f, 0f);
-		velocity 	= create(0f, 0f);
-		force 		= create(0f, 0f); // gets reset per update
-		
-		rotation 		= rotation(0f);
-		orientation 	= 0f;
-		angularVelocity = 0f;
-		torque 			= 0f; // gets reset per update
-		
-		immovable 	= false;
-		material 	= MaterialFactory.Medium();
+		material 	= null;
 		shape 		= null;
+		lmotion = new LinearMotion();
+		amotion = new AngularMotion();
+		
+		
+		force 		= create(0f, 0f); // gets reset per update
+		torque 		= 0f; // gets reset per update
+		rotation 	= rotation(0f);
 		ignore 		= new HashMap<Composite,Integer>();
+		immovable 	= false;
 	}
 	
 	/**
 	 * 
 	 * @return
 	 */
-	public Shape getShape()
-	{
-		return shape;
-	}
+	public Shape getShape() {return shape;}
 	
 	/**
 	 * 
 	 * @return
 	 */
-	public Material getMaterial()
-	{
-		return material;
-	}
+	public Material getMaterial() {return material;}
 	
 	/**
-	 * set a material for this entity
+	 * 
+	 * @return
 	 */
-	public void setMaterial(Material mat)
-	{
-		if (immovable) return;
-		material = mat;
-		compute();
-	}
+	public LinearMotion getLinearMotion() {return lmotion;}
 	
 	/**
-	 * provide a shape for the entity
+	 * 
+	 * @return
 	 */
-	public void setShape(Shape sh)
-	{
-		shape = sh;
-		compute();
-	}
-	
-	
-	
-	
+	public AngularMotion getAngularMotion() {return amotion;}
 	
 	/**
 	 * 
@@ -114,40 +88,57 @@ public class Composite
 	public Composite getCopy()
 	{
 		Composite c = new Composite();
+		c.setShape( shape.getClone() );
+		c.setMaterial( material.getClone() );
+		c.setLinearMotion( lmotion.getClone() );
+		c.setAngularMotion( amotion.getClone() );
 		
-		c.position = copy(position);
-		c.velocity = copy(velocity);
+		c.rotation = rotation(amotion.getOrientation());
 		c.force = copy(force);
-		
-		c.rotation = rotation(orientation);
-		c.orientation = orientation;
-		c.angularVelocity = angularVelocity;
 		c.torque = torque;
-		
 		c.immovable = immovable;
-		c.material = material;
-		c.shape = shape;
 		c.ignore = ignore;
 		
 		return c;
 	}
-
+	
+	// =================================================
+	
 	/**
-	 * set the location for this entity
+	 * set a material for this entity
 	 */
-	public void setPosition(float x, float y)
+	public void setMaterial(Material mat)
 	{
-		position = create(x, y);
+		if (immovable) return;
+		material = mat.getClone();
+		compute();
 	}
 	
 	/**
-	 * set the entity to a specific angle
+	 * provide a shape for the entity
 	 */
-	public Composite setOrientation(float angle)
+	public void setShape(Shape sh)
 	{
-		rotation = rotation(angle);
-		orientation = angle;
-		return this;
+		shape = sh.getClone();
+		compute();
+	}
+	
+	/**
+	 * 
+	 * @return
+	 */
+	public void setLinearMotion(LinearMotion lm)
+	{
+		lmotion = lm.getClone();
+	}
+	
+	/**
+	 * 
+	 * @return
+	 */
+	public void setAngularMotion(AngularMotion am)
+	{
+		amotion = am.getClone();
 	}
 	
 	/**
@@ -155,7 +146,7 @@ public class Composite
 	 */
 	public Composite setImmovable(boolean immovable) 
 	{
-		this.material = MaterialFactory.Static();
+		this.material = new StaticMaterial();
 		this.immovable = immovable;
 		compute();
 		return this;
@@ -197,8 +188,14 @@ public class Composite
 	 */
 	public void applyImpulse(float[] impulse, float[] contact)
 	{
-		velocity 		= project(velocity, impulse, inv_mass);
-		angularVelocity = angularVelocity + ( inv_inertia * cross(contact, impulse) );
+		float[] velocity = lmotion.getVelocity();
+		float avelocity = amotion.getVelocity();
+		
+		velocity = project(velocity, impulse, inv_mass);
+		avelocity = avelocity + ( inv_inertia * cross(contact, impulse) );
+		
+		lmotion.setVelocity(velocity);
+		amotion.setVelocity(avelocity);
 	}
 	
 	/**
@@ -217,12 +214,13 @@ public class Composite
 	 */
 	private void compute() 
 	{
-		if (shape != null)
-		{
-			float density = material.getDensity();
-			setMass(shape.getMass(density) );
-			setInertia(shape.getInertia(density) );
-		}
+		if (shape == null) return;
+		if (material == null) return;
+		
+		float density = material.getDensity();
+		setMass(shape.getMass(density) );
+		setInertia(shape.getInertia(density) );
+		
 	}
 	
 	/**

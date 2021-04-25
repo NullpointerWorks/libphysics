@@ -4,7 +4,7 @@ public interface Shape
 {
 	ShapeType getType();
 	float getArea();
-	float getMass(float d);
-	float getInertia(float d);
+	float getMass(float density);
+	float getInertia(float density);
 	Shape getClone();
 }
