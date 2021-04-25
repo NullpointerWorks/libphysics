@@ -3,7 +3,7 @@ package com.nullpointerworks.physics.engine.collision;
 import com.nullpointerworks.physics.engine.CollisionSolver;
 import com.nullpointerworks.physics.engine.Composite;
 import com.nullpointerworks.physics.engine.Manifold;
-import com.nullpointerworks.physics.engine.math.VectorMath;
+import com.nullpointerworks.physics.engine.VectorMath;
 
 public class PolygonCircle implements CollisionSolver
 {

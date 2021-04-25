@@ -25,7 +25,7 @@ public class CustomMaterial implements Material
 	public float getStaticFriction() {return staticF;}
 	
 	@Override
-	public float getDynamicFriction() {return kineticF;}
+	public float getKineticFriction() {return kineticF;}
 	
 	@Override
 	public Material getClone() 

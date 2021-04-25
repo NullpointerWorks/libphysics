@@ -1,18 +1,18 @@
 package com.nullpointerworks.physics.engine;
 
+import static com.nullpointerworks.physics.engine.MatrixMath.rotation;
+import static com.nullpointerworks.physics.engine.VectorMath.add;
+import static com.nullpointerworks.physics.engine.VectorMath.copy;
+import static com.nullpointerworks.physics.engine.VectorMath.create;
+import static com.nullpointerworks.physics.engine.VectorMath.cross;
+import static com.nullpointerworks.physics.engine.VectorMath.project;
+
 import java.util.HashMap;
 import java.util.Map;
 
 import com.nullpointerworks.physics.engine.material.Material;
 import com.nullpointerworks.physics.engine.motion.AngularMotion;
 import com.nullpointerworks.physics.engine.motion.LinearMotion;
-
-import static com.nullpointerworks.physics.engine.math.MatrixMath.rotation;
-import static com.nullpointerworks.physics.engine.math.VectorMath.create;
-import static com.nullpointerworks.physics.engine.math.VectorMath.copy;
-import static com.nullpointerworks.physics.engine.math.VectorMath.add;
-import static com.nullpointerworks.physics.engine.math.VectorMath.cross;
-import static com.nullpointerworks.physics.engine.math.VectorMath.project;
 
 public class Composite
 {
@@ -92,11 +92,12 @@ public class Composite
 		c.setLinearMotion( lmotion.getClone() );
 		c.setAngularMotion( amotion.getClone() );
 		
+		c.immovable = immovable;
+		c.ignore = ignore;
+		
 		c.rotation = rotation(amotion.getOrientation());
 		c.force = copy(force);
 		c.torque = torque;
-		c.immovable = immovable;
-		c.ignore = ignore;
 		
 		return c;
 	}

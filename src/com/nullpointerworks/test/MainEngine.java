@@ -1,11 +1,11 @@
 package com.nullpointerworks.test;
 
-import com.nullpointerworks.physics.GravitationConstants;
+import com.nullpointerworks.physics.PlanetaryGravitation;
 import com.nullpointerworks.physics.engine.Composite;
+import com.nullpointerworks.physics.engine.VectorMath;
 import com.nullpointerworks.physics.engine.material.LightMaterial;
 import com.nullpointerworks.physics.engine.material.Material;
 import com.nullpointerworks.physics.engine.material.StaticMaterial;
-import com.nullpointerworks.physics.engine.math.VectorMath;
 import com.nullpointerworks.physics.engine.shape.Circle;
 import com.nullpointerworks.physics.engine.shape.Polygon;
 
@@ -30,7 +30,7 @@ public class MainEngine
 		RenderCommand cRenderToScreen 	= new CanvasRenderCommand(vWindow, mPhysiscSim);
 		
 		mPhysiscSim.setTargetFPS(60);
-		mPhysiscSim.setGravity( VectorMath.create(0f, -10f) , (float)GravitationConstants.EARTH );
+		mPhysiscSim.setGravity( VectorMath.create(0f, -10f) , (float)PlanetaryGravitation.EARTH );
 		
 		mGameSim.setTargetFPS(30);
 		mGameSim.addRenderCommand(cRenderToScreen);
@@ -84,7 +84,8 @@ public class MainEngine
 		Composite immovableBox = new Composite();
 		immovableBox.setShape( new Polygon(vBox, nBox) );
 		immovableBox.setMaterial( new StaticMaterial() );
-
+		immovableBox.setImmovable(true);
+		
 		sim.addComposite(immovableBox);
 	}
 }

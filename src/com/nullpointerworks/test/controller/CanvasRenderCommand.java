@@ -1,5 +1,7 @@
 package com.nullpointerworks.test.controller;
 
+import static com.nullpointerworks.physics.engine.VectorMath.project;
+
 import java.util.List;
 
 import com.nullpointerworks.color.ColorFormat;
@@ -10,8 +12,6 @@ import com.nullpointerworks.physics.engine.ShapeType;
 import com.nullpointerworks.physics.engine.shape.Circle;
 import com.nullpointerworks.test.model.PhysicsLoop;
 import com.nullpointerworks.test.view.GameView;
-
-import static com.nullpointerworks.physics.engine.math.VectorMath.project;
 
 public class CanvasRenderCommand implements RenderCommand
 {

@@ -1,4 +1,7 @@
-package com.nullpointerworks.physics.engine.math;
+package com.nullpointerworks.physics.engine;
+
+import static com.nullpointerworks.physics.engine.VectorMath.mul;
+import static com.nullpointerworks.physics.engine.VectorMath.dot;
 
 public class ImpulseMath 
 {
@@ -10,16 +13,13 @@ public class ImpulseMath
 	public static final float BIAS_RELATIVE = 0.95f;
 	public static final float BIAS_ABSOLUTE = 0.01f;
 	
-	public static float RESTING = EPSILON;
-	
 	/**
 	 * set the gravity resting constant for the engine
 	 */
 	public static float getRestingConstant(float[] g, float dt)
 	{
-		float[] gdt = VectorMath.mul(g, dt);
-		RESTING = VectorMath.dot(gdt,gdt) + EPSILON;
-		return RESTING;
+		float[] gdt = mul(g, dt);
+		return dot(gdt,gdt) + EPSILON;
 	}
 	
 	/**

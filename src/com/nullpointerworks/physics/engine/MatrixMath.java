@@ -1,4 +1,4 @@
-package com.nullpointerworks.physics.engine.math;
+package com.nullpointerworks.physics.engine;
 
 public class MatrixMath 
 {

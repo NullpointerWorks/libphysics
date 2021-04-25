@@ -1,4 +1,4 @@
-package com.nullpointerworks.physics.engine.math;
+package com.nullpointerworks.physics.engine;
 
 import com.nullpointerworks.math.Approximate;
 

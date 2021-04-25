@@ -1,23 +1,21 @@
 package com.nullpointerworks.physics.engine.collision;
 
+import static com.nullpointerworks.physics.engine.ImpulseMath.gt;
+import static com.nullpointerworks.physics.engine.MatrixMath.transform;
+import static com.nullpointerworks.physics.engine.MatrixMath.transpose;
+import static com.nullpointerworks.physics.engine.VectorMath.add;
+import static com.nullpointerworks.physics.engine.VectorMath.copy;
+import static com.nullpointerworks.physics.engine.VectorMath.dot;
+import static com.nullpointerworks.physics.engine.VectorMath.mul;
+import static com.nullpointerworks.physics.engine.VectorMath.neg;
+import static com.nullpointerworks.physics.engine.VectorMath.normal;
+import static com.nullpointerworks.physics.engine.VectorMath.normalize;
+import static com.nullpointerworks.physics.engine.VectorMath.sub;
+
 import com.nullpointerworks.physics.engine.CollisionSolver;
 import com.nullpointerworks.physics.engine.Composite;
 import com.nullpointerworks.physics.engine.Manifold;
 import com.nullpointerworks.physics.engine.shape.Polygon;
-
-import static com.nullpointerworks.physics.engine.math.ImpulseMath.gt;
-
-import static com.nullpointerworks.physics.engine.math.MatrixMath.transform;
-import static com.nullpointerworks.physics.engine.math.MatrixMath.transpose;
-
-import static com.nullpointerworks.physics.engine.math.VectorMath.add;
-import static com.nullpointerworks.physics.engine.math.VectorMath.sub;
-import static com.nullpointerworks.physics.engine.math.VectorMath.dot;
-import static com.nullpointerworks.physics.engine.math.VectorMath.mul;
-import static com.nullpointerworks.physics.engine.math.VectorMath.neg;
-import static com.nullpointerworks.physics.engine.math.VectorMath.copy;
-import static com.nullpointerworks.physics.engine.math.VectorMath.normalize;
-import static com.nullpointerworks.physics.engine.math.VectorMath.normal;
 
 public class PolygonPolygon implements CollisionSolver 
 {

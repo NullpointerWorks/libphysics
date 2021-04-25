@@ -11,8 +11,8 @@ public class LightMaterial implements Material
 	{
 		density 	= 2.5f;
 		restitution = 0.9f;
-		staticF 	= 0.5f;
-		kineticF 	= 0.3f;
+		staticF 	= 0.6f;
+		kineticF 	= 0.4f;
 	}
 	
 	@Override
@@ -25,7 +25,7 @@ public class LightMaterial implements Material
 	public float getStaticFriction() {return staticF;}
 	
 	@Override
-	public float getDynamicFriction() {return kineticF;}
+	public float getKineticFriction() {return kineticF;}
 	
 	@Override
 	public Material getClone() 

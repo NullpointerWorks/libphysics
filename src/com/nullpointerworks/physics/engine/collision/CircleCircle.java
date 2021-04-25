@@ -3,8 +3,8 @@ package com.nullpointerworks.physics.engine.collision;
 import com.nullpointerworks.physics.engine.CollisionSolver;
 import com.nullpointerworks.physics.engine.Composite;
 import com.nullpointerworks.physics.engine.Manifold;
+import com.nullpointerworks.physics.engine.VectorMath;
 import com.nullpointerworks.physics.engine.shape.Circle;
-import com.nullpointerworks.physics.engine.math.VectorMath;
 
 public class CircleCircle implements CollisionSolver 
 {

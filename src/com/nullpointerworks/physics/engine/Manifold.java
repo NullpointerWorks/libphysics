@@ -1,23 +1,16 @@
 package com.nullpointerworks.physics.engine;
 
+import static com.nullpointerworks.physics.engine.VectorMath.create;
+
 import com.nullpointerworks.math.FloatMath;
 import com.nullpointerworks.math.vector.Vector2;
 import com.nullpointerworks.physics.engine.material.Material;
-import com.nullpointerworks.physics.engine.math.ImpulseMath;
-
-import static com.nullpointerworks.physics.engine.math.VectorMath.create;
 
 public class Manifold 
 {
-	public static Manifold New(Composite A, Composite B) 
-	{
-		return new Manifold(A,B);
-	}
-	
-	// ====================================
-
 	private final Vector2 vec2 = Vector2.New();
 	public Composite A,B;
+	private float RESTING;
 	public int contact_count;
 	public float penetration;
 	public float restitution;
@@ -26,9 +19,10 @@ public class Manifold
 	public float[] normal;
 	public float[][] contacts;
 	
-	public Manifold(Composite A, Composite B)
+	public Manifold(Composite A, Composite B, float resting)
 	{
 		this.A = A; this.B = B;
+		RESTING = resting;
 		normal = new float[] {0f,0f};
 		contacts = new float[][] {{0f,0f}, {0f,0f}};
 	}
@@ -52,7 +46,7 @@ public class Manifold
 		// get average restitution
 		restitution = FloatMath.min(matA.getRestitution(), matB.getRestitution());
 		sFriction = FloatMath.pythagoras(matA.getStaticFriction(), matB.getStaticFriction());
-		kFriction = FloatMath.pythagoras(matA.getDynamicFriction(), matB.getDynamicFriction());
+		kFriction = FloatMath.pythagoras(matA.getKineticFriction(), matB.getKineticFriction());
 		
 		// for each contact point: see if its colliding, or resting on a surface
 		for (int i=0; i<contact_count; i++)
@@ -78,7 +72,7 @@ public class Manifold
 			
 			float m = vec2.dot(relativeV,relativeV); // square distance
 			
-			if (m < ImpulseMath.RESTING) restitution = 0.0f;
+			if (m < RESTING) restitution = 0.0f;
 		}
 	}
 	

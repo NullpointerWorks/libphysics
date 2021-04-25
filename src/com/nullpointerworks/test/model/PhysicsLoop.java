@@ -1,16 +1,16 @@
 package com.nullpointerworks.test.model;
 
+import static com.nullpointerworks.physics.engine.VectorMath.mul;
+import static com.nullpointerworks.physics.engine.VectorMath.project;
+
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Vector;
 
 import com.nullpointerworks.game.Asap;
 import com.nullpointerworks.physics.engine.Composite;
+import com.nullpointerworks.physics.engine.ImpulseMath;
 import com.nullpointerworks.physics.engine.Manifold;
-import com.nullpointerworks.physics.engine.math.ImpulseMath;
-
-import static com.nullpointerworks.physics.engine.math.VectorMath.mul;
-import static com.nullpointerworks.physics.engine.math.VectorMath.project;
 
 public class PhysicsLoop extends Asap
 {
@@ -94,7 +94,7 @@ public class PhysicsLoop extends Asap
 	{
 		contacts.clear();
 		
-		ImpulseMath.getRestingConstant(gravityVector, (float)dt);
+		float resting = ImpulseMath.getRestingConstant(gravityVector, (float)dt);
 		
 		int lb = bodies.size();
 		for (int a=0; a<lb; a++)
@@ -110,7 +110,7 @@ public class PhysicsLoop extends Asap
 				if (A.immovable && B.immovable) continue;
 				if (A.inv_mass + B.inv_mass == 0.0f) continue;
 				
-				Manifold m = Manifold.New(A,B);
+				Manifold m = new Manifold(A,B,resting);
 				
 				// if collision detected contact
 				m.solve();

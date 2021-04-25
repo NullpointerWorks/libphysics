@@ -1,7 +1,7 @@
 package com.nullpointerworks.physics.engine.shape;
 
-import static com.nullpointerworks.physics.engine.math.VectorMath.cross;
-import static com.nullpointerworks.physics.engine.math.VectorMath.dot;
+import static com.nullpointerworks.physics.engine.VectorMath.cross;
+import static com.nullpointerworks.physics.engine.VectorMath.dot;
 
 import com.nullpointerworks.physics.engine.Shape;
 import com.nullpointerworks.physics.engine.ShapeType;

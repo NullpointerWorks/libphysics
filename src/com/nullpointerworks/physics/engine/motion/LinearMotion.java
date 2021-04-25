@@ -1,7 +1,7 @@
 package com.nullpointerworks.physics.engine.motion;
 
-import static com.nullpointerworks.physics.engine.math.VectorMath.copy;
-import static com.nullpointerworks.physics.engine.math.VectorMath.create;
+import static com.nullpointerworks.physics.engine.VectorMath.copy;
+import static com.nullpointerworks.physics.engine.VectorMath.create;
 
 public class LinearMotion 
 {

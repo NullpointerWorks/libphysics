@@ -3,7 +3,7 @@ package com.nullpointerworks.physics;
 /**
  * gravity acceleration in m/s^2
  */
-public class GravitationConstants
+public class PlanetaryGravitation
 {
 	// other
     public static final double ZERO 		= 0.0f;

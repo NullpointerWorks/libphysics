@@ -10,9 +10,9 @@ public class MediumMaterial implements Material
 	public MediumMaterial()
 	{
 		density 	= 5f;
-		restitution = 0.5f;
-		staticF 	= 0.5f;
-		kineticF 	= 0.3f;
+		restitution = 0.6f;
+		staticF 	= 0.6f;
+		kineticF 	= 0.4f;
 	}
 	
 	@Override
@@ -25,7 +25,7 @@ public class MediumMaterial implements Material
 	public float getStaticFriction() {return staticF;}
 	
 	@Override
-	public float getDynamicFriction() {return kineticF;}
+	public float getKineticFriction() {return kineticF;}
 	
 	@Override
 	public Material getClone() 

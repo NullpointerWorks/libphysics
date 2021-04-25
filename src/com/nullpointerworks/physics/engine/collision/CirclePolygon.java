@@ -2,10 +2,10 @@ package com.nullpointerworks.physics.engine.collision;
 
 import com.nullpointerworks.physics.engine.CollisionSolver;
 import com.nullpointerworks.physics.engine.Composite;
+import com.nullpointerworks.physics.engine.ImpulseMath;
 import com.nullpointerworks.physics.engine.Manifold;
-import com.nullpointerworks.physics.engine.math.ImpulseMath;
-import com.nullpointerworks.physics.engine.math.MatrixMath;
-import com.nullpointerworks.physics.engine.math.VectorMath;
+import com.nullpointerworks.physics.engine.MatrixMath;
+import com.nullpointerworks.physics.engine.VectorMath;
 import com.nullpointerworks.physics.engine.shape.Circle;
 import com.nullpointerworks.physics.engine.shape.Polygon;
 
