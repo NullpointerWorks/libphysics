@@ -3,6 +3,7 @@ package com.nullpointerworks.test;
 import com.nullpointerworks.physics.PlanetaryGravitation;
 import com.nullpointerworks.physics.engine.Composite;
 import com.nullpointerworks.physics.engine.VectorMath;
+import com.nullpointerworks.physics.engine.material.HeavyMaterial;
 import com.nullpointerworks.physics.engine.material.LightMaterial;
 import com.nullpointerworks.physics.engine.material.Material;
 import com.nullpointerworks.physics.engine.material.StaticMaterial;
@@ -40,11 +41,12 @@ public class MainEngine
 		vWindow.setVisible(true);
 		
 		
+
+		makeBox(mPhysiscSim, 50f, 200f, new HeavyMaterial(), false);
+		makeBox(mPhysiscSim, 50f, 0f, new StaticMaterial(), true);
 		
-		makeImmovableBox(mPhysiscSim, 400f, 300f);
 		
-		
-		makeCirle(mPhysiscSim, 20f, 400f, 400f, new LightMaterial(), false);
+		makeCirle(mPhysiscSim, 20f, 500f, 500f, new LightMaterial(), false);
 		makeCirle(mPhysiscSim, 100f, 250f, 100f, new StaticMaterial(), true);
 		makeCirle(mPhysiscSim, 100f, 450f, 100f, new StaticMaterial(), true);
 		
@@ -61,7 +63,7 @@ public class MainEngine
 		sim.addComposite(circle);
 	}
 	
-	private void makeImmovableBox(PhysicsLoop sim, float x, float y) 
+	private void makeBox(PhysicsLoop sim, float x, float y, Material mat, boolean immovable) 
 	{
 		
 		float[][] vBox = 
@@ -82,9 +84,10 @@ public class MainEngine
 		
 		Composite immovableBox = new Composite();
 		immovableBox.setShape( new Polygon(vBox, nBox) );
-		immovableBox.setMaterial( new StaticMaterial() );
+		immovableBox.setMaterial( mat );
 		immovableBox.getLinearMotion().setPosition( new float[] {x,y} );
-		immovableBox.setImmovable(true);
+		immovableBox.getAngularMotion().setOrientation( 3.1415f * 0.04f);
+		immovableBox.setImmovable(immovable);
 		
 		sim.addComposite(immovableBox);
 	}

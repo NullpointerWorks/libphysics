@@ -1,6 +1,9 @@
 package com.nullpointerworks.test.controller;
 
 import static com.nullpointerworks.physics.engine.VectorMath.project;
+import static com.nullpointerworks.physics.engine.VectorMath.add;
+import static com.nullpointerworks.physics.engine.MatrixMath.rotation;
+import static com.nullpointerworks.physics.engine.MatrixMath.transform;
 
 import java.util.List;
 
@@ -76,22 +79,39 @@ public class CanvasRenderCommand implements RenderCommand
 		//float[] J = project(P, rotation(a), r);
 		//line(P, J, CYAN, canvas);
 		
-		//float[] J = project(P, V, 1f);
-		//line(P, J, RED, canvas);
+		float[] J = project(P, V, 1f);
+		line(P, J, RED, canvas);
 	}
 	
 	private void drawPolygon(Composite c, IntBuffer canvas)
 	{
-		Polygon p = (Polygon)c.getShape();
-		float[][] v = p.vertices;
+		Polygon poly = (Polygon)c.getShape();
+		float[][] v = poly.vertices;
+		float[] p = c.getLinearMotion().getPosition();
+		float[] V = c.getLinearMotion().getVelocity();
+		float r = c.getAngularMotion().getOrientation();
+		
+		float[][] rMatrix = rotation(r);
+		v = transform(rMatrix,v);
 		
 		float[] b1 = v[0];
 		for (int i=1,l=v.length; i<=l; i++)
 		{
 			float[] b2 = v[i%l];
-			line(b1,b2,WHITE,canvas);
+			float[] a = add(b1,p);
+			float[] b = add(b2,p);
+			
+			a[1] = viewHeight - a[1];
+			b[1] = viewHeight - b[1];
+			
+			line(a,b,WHITE,canvas);
 			b1 = b2;
 		}
+
+		p[1] = viewHeight - p[1];
+		V[1] = -V[1];
+		float[] J = project(p, V, 1f);
+		line(p, J, RED, canvas);
 	}
 	
 	private void line(float[] p, float[] j, int c, IntBuffer s) 

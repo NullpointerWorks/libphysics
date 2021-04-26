@@ -160,7 +160,7 @@ public class Manifold
 				impulseT = mul(tangent, -j*kFriction);
 			}
 			
-			A.applyImpulse(neg(impulseT) ,relativeA);
+			A.applyImpulse(neg(impulseT), relativeA);
 			B.applyImpulse(impulseT, relativeB);
 		}
 	}

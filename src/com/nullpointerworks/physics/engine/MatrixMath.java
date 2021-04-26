@@ -29,6 +29,17 @@ public class MatrixMath
 		float vy = m2[0]*v[0] + m2[1]*v[1];
 		return new float[] {vx,vy};
 	}
+
+	public static float[][] transform(float[][] matrix, float[][] vdata)
+	{
+		float[][] verts = new float[vdata.length][2];
+		for (int i=0,l=vdata.length; i<l; i++)
+		{
+			float[] v = vdata[i];
+			verts[i] = transform(matrix,v);
+		}
+		return verts;
+	}
 	
 	
 }
