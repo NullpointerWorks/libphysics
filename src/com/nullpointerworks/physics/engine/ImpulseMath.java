@@ -5,6 +5,9 @@ import static com.nullpointerworks.physics.engine.VectorMath.dot;
 
 public class ImpulseMath 
 {
+	/**
+	 * The allowable maximum difference between floating-point numbers to be considered the same. 
+	 */
 	public static final float EPSILON 		= 0.0001f;
 	
 	public static final float CORRECTION 	= 0.5f;

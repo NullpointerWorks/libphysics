@@ -41,13 +41,13 @@ public class MainEngine
 		
 		
 		
+		makeImmovableBox(mPhysiscSim, 400f, 300f);
 		
 		
-		makeCirle(mPhysiscSim, 20f, 400f, 500f, new LightMaterial(), false);
+		makeCirle(mPhysiscSim, 20f, 400f, 400f, new LightMaterial(), false);
 		makeCirle(mPhysiscSim, 100f, 250f, 100f, new StaticMaterial(), true);
 		makeCirle(mPhysiscSim, 100f, 450f, 100f, new StaticMaterial(), true);
 		
-		//makeImmovableBox(mPhysiscSim, 400f, 300f);
 	}
 	
 	private void makeCirle(PhysicsLoop sim, float size, float x, float y, Material mat, boolean immovable) 
@@ -66,18 +66,18 @@ public class MainEngine
 		
 		float[][] vBox = 
 		{
-			{-100f+x, 30f+y},
-			{ 100f+x, 30f+y},
-			{ 100f+x,-30f+y},
-			{-100f+x,-30f+y}
+			{-100f, 20f},
+			{ 100f, 20f},
+			{ 100f,-20f},
+			{-100f,-20f}
 		};
 		
 		float[][] nBox = 
 		{
 			{ 1f, 0f},
-			{ 0f, 1f},
+			{ 0f,-1f},
 			{-1f, 0f},
-			{ 0f,-1f}	
+			{ 0f,1f}	
 		};
 		
 		Composite immovableBox = new Composite();
