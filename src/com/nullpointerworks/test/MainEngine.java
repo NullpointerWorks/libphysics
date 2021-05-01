@@ -3,12 +3,8 @@ package com.nullpointerworks.test;
 import com.nullpointerworks.physics.PlanetaryGravitation;
 import com.nullpointerworks.physics.engine.Composite;
 import com.nullpointerworks.physics.engine.VectorMath;
-import com.nullpointerworks.physics.engine.material.HeavyMaterial;
-import com.nullpointerworks.physics.engine.material.LightMaterial;
-import com.nullpointerworks.physics.engine.material.Material;
-import com.nullpointerworks.physics.engine.material.StaticMaterial;
-import com.nullpointerworks.physics.engine.shape.Circle;
-import com.nullpointerworks.physics.engine.shape.Polygon;
+import com.nullpointerworks.physics.engine.material.*;
+import com.nullpointerworks.physics.engine.shape.*;
 
 import com.nullpointerworks.test.controller.CanvasRenderCommand;
 import com.nullpointerworks.test.controller.RenderCommand;
@@ -30,8 +26,9 @@ public class MainEngine
 		GameView vWindow 				= new GameView(800, 600);
 		RenderCommand cRenderToScreen 	= new CanvasRenderCommand(vWindow, mPhysiscSim);
 		
-		mPhysiscSim.setTargetFPS(60);
+		mPhysiscSim.setTargetFPS(100);
 		mPhysiscSim.setGravity( VectorMath.create(0f, -10f) , (float)PlanetaryGravitation.EARTH );
+		mPhysiscSim.setIntegrationCycles(20);
 		
 		mGameSim.setTargetFPS(30);
 		mGameSim.addRenderCommand(cRenderToScreen);
@@ -41,7 +38,7 @@ public class MainEngine
 		vWindow.setVisible(true);
 		
 		
-
+		
 		//makeBox(mPhysiscSim, 50f, 200f, new HeavyMaterial(), false);
 		//makeBox(mPhysiscSim, 50f, 0f, new StaticMaterial(), true);
 		

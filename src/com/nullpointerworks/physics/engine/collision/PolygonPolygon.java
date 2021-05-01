@@ -15,7 +15,7 @@ import static com.nullpointerworks.physics.engine.VectorMath.sub;
 
 import com.nullpointerworks.physics.engine.CollisionSolver;
 import com.nullpointerworks.physics.engine.Composite;
-import com.nullpointerworks.physics.engine.Manifold;
+import com.nullpointerworks.physics.engine.manifold.Manifold;
 import com.nullpointerworks.physics.engine.shape.Polygon;
 
 public class PolygonPolygon implements CollisionSolver 

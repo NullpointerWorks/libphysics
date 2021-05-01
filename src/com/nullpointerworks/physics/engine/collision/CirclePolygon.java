@@ -14,7 +14,7 @@ import static com.nullpointerworks.physics.engine.VectorMath.normalize;
 import com.nullpointerworks.physics.engine.CollisionSolver;
 import com.nullpointerworks.physics.engine.Composite;
 import com.nullpointerworks.physics.engine.ImpulseMath;
-import com.nullpointerworks.physics.engine.Manifold;
+import com.nullpointerworks.physics.engine.manifold.Manifold;
 import com.nullpointerworks.physics.engine.shape.Circle;
 import com.nullpointerworks.physics.engine.shape.Polygon;
 

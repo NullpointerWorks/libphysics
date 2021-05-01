@@ -10,8 +10,8 @@ public class ImpulseMath
 	 */
 	public static final float EPSILON 		= 0.0001f;
 	
-	public static final float CORRECTION 	= 0.5f;
-	public static final float ALLOWANCE 	= 0.04f;
+	public static final float CORRECTION 	= 0.35f;
+	public static final float ALLOWANCE 	= 0.05f;
 	
 	public static final float BIAS_RELATIVE = 0.95f;
 	public static final float BIAS_ABSOLUTE = 0.01f;

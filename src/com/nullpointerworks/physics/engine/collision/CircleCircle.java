@@ -2,8 +2,9 @@ package com.nullpointerworks.physics.engine.collision;
 
 import com.nullpointerworks.physics.engine.CollisionSolver;
 import com.nullpointerworks.physics.engine.Composite;
-import com.nullpointerworks.physics.engine.Manifold;
+import com.nullpointerworks.physics.engine.ImpulseMath;
 import com.nullpointerworks.physics.engine.VectorMath;
+import com.nullpointerworks.physics.engine.manifold.Manifold;
 import com.nullpointerworks.physics.engine.shape.Circle;
 
 public class CircleCircle implements CollisionSolver 
@@ -33,7 +34,7 @@ public class CircleCircle implements CollisionSolver
 		}
 		
 		// if circles are exactly on top of each other
-		if (dist == 0.0f)
+		if (ImpulseMath.equal(dist,0f))
 		{
 			// drive the two circles away in some direction.
 			m.contact_count = 1;

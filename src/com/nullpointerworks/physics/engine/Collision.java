@@ -1,6 +1,7 @@
 package com.nullpointerworks.physics.engine;
 
 import com.nullpointerworks.physics.engine.collision.*;
+import com.nullpointerworks.physics.engine.manifold.Manifold;
 
 public class Collision 
 {

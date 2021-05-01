@@ -1,4 +1,4 @@
-package com.nullpointerworks.physics.engine;
+package com.nullpointerworks.physics.engine.manifold;
 
 import static com.nullpointerworks.physics.engine.VectorMath.create;
 import static com.nullpointerworks.physics.engine.VectorMath.normal;
@@ -11,12 +11,15 @@ import static com.nullpointerworks.physics.engine.VectorMath.cross;
 import static com.nullpointerworks.physics.engine.VectorMath.project;
 
 import com.nullpointerworks.math.FloatMath;
+import com.nullpointerworks.physics.engine.Collision;
+import com.nullpointerworks.physics.engine.Composite;
+import com.nullpointerworks.physics.engine.ImpulseMath;
 import com.nullpointerworks.physics.engine.material.Material;
 
 public class Manifold 
 {
-	private Composite A,B;
-	private float RESTING;
+	private final Composite A, B;
+	private final float resting;
 	
 	public int contact_count;
 	public float penetration;
@@ -30,9 +33,10 @@ public class Manifold
 	{
 		this.A = A; 
 		this.B = B;
-		RESTING = resting;
-		normal = new float[] {0f,0f};
-		contacts = new float[][] {{0f,0f}, {0f,0f}};
+		this.resting = resting;
+		
+		normal 		= new float[] {0f,0f};
+		contacts 	= new float[][] {{0f,0f}, {0f,0f}};
 	}
 	
 	/**
@@ -41,6 +45,15 @@ public class Manifold
 	public void solve()
 	{
 		Collision.solve(this, A, B);
+	}
+	
+	/**
+	 * Returns true if the manifold has detected one or more collisions between the two objects, false otherwise.
+	 * @return true if the manifold has detected one or more collisions between the two objects, false otherwise
+	 */
+	public boolean hasContacts()
+	{
+		return contact_count > 0;
 	}
 	
 	/**
@@ -75,7 +88,7 @@ public class Manifold
 			relativeV = project(relativeV, normal(relativeA), -Aavel );
 			
 			float m = dot(relativeV,relativeV); // square distance
-			if (m < RESTING) 
+			if (m < resting) 
 			{
 				restitution = 0.0f;
 				break;

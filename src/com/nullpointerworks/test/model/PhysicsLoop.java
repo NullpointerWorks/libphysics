@@ -2,6 +2,8 @@ package com.nullpointerworks.test.model;
 
 import static com.nullpointerworks.physics.engine.VectorMath.mul;
 import static com.nullpointerworks.physics.engine.VectorMath.project;
+import static com.nullpointerworks.physics.engine.ImpulseMath.equal;
+import static com.nullpointerworks.physics.engine.ImpulseMath.getRestingConstant;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -9,8 +11,7 @@ import java.util.Vector;
 
 import com.nullpointerworks.game.Asap;
 import com.nullpointerworks.physics.engine.Composite;
-import com.nullpointerworks.physics.engine.ImpulseMath;
-import com.nullpointerworks.physics.engine.Manifold;
+import com.nullpointerworks.physics.engine.manifold.Manifold;
 
 public class PhysicsLoop extends Asap
 {
@@ -25,6 +26,12 @@ public class PhysicsLoop extends Asap
 		bodies = new Vector<Composite>();
 		contacts = new ArrayList<Manifold>();
 		gravityVector = new float[] {0f, 9.8f};
+	}
+	
+	public synchronized void setIntegrationCycles(int it)
+	{
+		if (it < 1) it = 1;
+		iterations = it;
 	}
 	
 	public synchronized void setGravity(float[] vector, float acc)
@@ -54,7 +61,7 @@ public class PhysicsLoop extends Asap
 	{
 		contacts.clear();
 		
-		float resting = ImpulseMath.getRestingConstant(gravityVector, (float)dt);
+		float resting = getRestingConstant(gravityVector, (float)dt);
 		
 		int lb = bodies.size();
 		for (int a=0; a<lb; a++)
@@ -69,13 +76,12 @@ public class PhysicsLoop extends Asap
 				if (B.contains(A)) continue;
 				
 				if (A.isImmovable() && B.isImmovable()) continue;
+				//if (equal(A.inv_mass, B.inv_mass)) continue;
 				if (A.inv_mass + B.inv_mass == 0.0f) continue;
 				
 				Manifold m = new Manifold(A,B,resting);
 				m.solve();
-				
-				// if collision detected contact
-				if (m.contact_count > 0)
+				if (m.hasContacts())
 				{
 					contacts.add(m);
 				}
@@ -88,13 +94,11 @@ public class PhysicsLoop extends Asap
 			integrateForces(C, (float)dt);
 		}
 		
-		// ==== apply impulse
+		// ==== apply impulses
 		for (Manifold m : contacts)
 		{
 			m.preprare();
 		}
-		
-		// ==== apply impulses
 		for (int i=0; i<iterations; i++)
 		for (Manifold m : contacts)
 		{
@@ -125,7 +129,7 @@ public class PhysicsLoop extends Asap
 		bodies.clear();
 		contacts.clear();
 	}
-
+	
 	@Override
 	public void onRender(double interpolation) { }
 
@@ -139,27 +143,6 @@ public class PhysicsLoop extends Asap
 	}
 	
 	/**
-	 * apply all velocities to the composite's position
-	 */
-	private void integrateVelocity(Composite b, float dt)
-	{
-		if (b.isImmovable()) return;
-		
-		float[] P 	= b.getLinearMotion().getPosition();
-		float O 	= b.getAngularMotion().getOrientation();
-		
-		// p = v * dt
-		P = project(P, b.getLinearMotion().getVelocity(), dt);
-		O = O + b.getAngularMotion().getVelocity() * dt;
-		
-		b.getLinearMotion().setPosition(P);
-		b.getAngularMotion().setOrientation(O);
-		
-		// semi-implicit Euler
-		integrateForces(b,dt);
-	}
-	
-	/**
 	 * apply all accelerations to the composite's velocity
 	 */
 	private void integrateForces(Composite b, float dt)
@@ -169,14 +152,43 @@ public class PhysicsLoop extends Asap
 		float[] v 	= b.getLinearMotion().getVelocity();
 		float a 	= b.getAngularMotion().getVelocity();
 		
-		// v = F/m * dt
-		// w = T/Ip * dt
-		
+		// calculate change in velocity
+		// dv = F/m * dt = force divided by mass times delta-time
 		v = project(v, b.force, b.inv_mass * dt);
 		v = project(v, gravityVector, dt);
+		
+		// calculate change in angular velocity 
+		// w = T/Ip * dt = torque divided by moment of inertia times delta-time
 		a = a + b.torque * b.inv_inertia * dt;
 		
 		b.getLinearMotion().setVelocity(v);
 		b.getAngularMotion().setVelocity(a);
+	}
+	
+	/**
+	 * apply all velocities to the composite's position
+	 */
+	private void integrateVelocity(Composite b, float dt)
+	{
+		if (b.isImmovable()) return;
+		
+		// Euler integration
+		integrateForces(b,dt);
+		
+		float[] lP 	= b.getLinearMotion().getPosition();
+		float[] lV	= b.getLinearMotion().getVelocity();
+		
+		float aO 	= b.getAngularMotion().getOrientation();
+		float aV	= b.getAngularMotion().getVelocity();
+		
+		// p = v * dt
+		lP = project(lP, lV, dt);
+		aO = aO + aV * dt;
+		
+		b.getLinearMotion().setPosition(lP);
+		b.getAngularMotion().setOrientation(aO);
+		
+		// semi-implicit Euler by applying forces after integration
+		//integrateForces(b,dt);
 	}
 }
