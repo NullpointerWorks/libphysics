@@ -62,14 +62,6 @@ public class Manifold
 	}
 	
 	/**
-	 * Call the collision checker and solve for the given compositions
-	 */
-	public void solve()
-	{
-		Collision.solve(this, A, B);
-	}
-	
-	/**
 	 * preliminary contact check
 	 */
 	public void preprare() 

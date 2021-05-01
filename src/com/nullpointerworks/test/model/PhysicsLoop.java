@@ -2,8 +2,9 @@ package com.nullpointerworks.test.model;
 
 import static com.nullpointerworks.physics.engine.VectorMath.mul;
 import static com.nullpointerworks.physics.engine.VectorMath.project;
-import static com.nullpointerworks.physics.engine.ImpulseMath.equal;
+import static com.nullpointerworks.physics.engine.Collision.solve;
 import static com.nullpointerworks.physics.engine.ImpulseMath.getRestingConstant;
+import static com.nullpointerworks.physics.engine.ImpulseMath.equal;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -71,16 +72,15 @@ public class PhysicsLoop extends Asap
 			{
 				Composite B = bodies.get(b);
 				
-				// check blacklist, immovability, or infinite mass
+				// check blacklist, immovability or "infinite" mass
 				if (A.contains(B)) continue;
 				if (B.contains(A)) continue;
-				
 				if (A.isImmovable() && B.isImmovable()) continue;
-				//if (equal(A.inv_mass, B.inv_mass)) continue;
-				if (A.inv_mass + B.inv_mass == 0.0f) continue;
+				if (equal(A.inv_mass + B.inv_mass, 0f)) continue;
 				
-				Manifold m = new Manifold(A,B,resting);
-				m.solve();
+				Manifold m = new Manifold(A, B, resting);
+				solve(m, A, B);
+				
 				if (m.contact_count > 0)
 				{
 					contacts.add(m);

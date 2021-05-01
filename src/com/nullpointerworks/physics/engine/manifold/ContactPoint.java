@@ -8,11 +8,11 @@ public class ContactPoint
 	private final float[] normal;
 	private final float penetration;
 	
-	public ContactPoint(float[] P, float[] N, float p)
+	public ContactPoint(float[] P, float[] N, float pd)
 	{
 		position = P;
 		normal = N;
-		penetration = p;
+		penetration = pd;
 	}
 	
 	public float[] getPosition()
