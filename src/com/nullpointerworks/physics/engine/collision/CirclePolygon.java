@@ -60,7 +60,10 @@ public class CirclePolygon implements CollisionSolver
 		}
 		
 		// if the biggest positive separation is beyond the radius, return. no collision
-		if (separation > radiusA) return;
+		if (separation > radiusA) 
+		{
+			return;
+		}
 		
 		// check to see if the center of the circle is inside the polygon
 		if (separation < ImpulseMath.EPSILON)

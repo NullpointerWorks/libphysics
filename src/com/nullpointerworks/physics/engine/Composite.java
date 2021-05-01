@@ -186,13 +186,13 @@ public class Composite
 	 */
 	public void applyImpulse(float[] impulse, float[] contact)
 	{
-		float[] velocity = lmotion.getVelocity();
+		float[] lvelocity = lmotion.getVelocity();
 		float avelocity = amotion.getVelocity();
 		
-		velocity = project(velocity, impulse, inv_mass);
-		avelocity = avelocity + ( inv_inertia * cross(contact, impulse) );
+		lvelocity = project(lvelocity, impulse, inv_mass);
+		avelocity = avelocity + ( cross(contact, impulse) * inv_inertia );
 		
-		lmotion.setVelocity(velocity);
+		lmotion.setVelocity(lvelocity);
 		amotion.setVelocity(avelocity);
 	}
 	
