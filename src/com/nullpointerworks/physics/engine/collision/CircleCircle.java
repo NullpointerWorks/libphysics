@@ -39,12 +39,13 @@ public class CircleCircle implements CollisionSolver
 		// if circles are exactly on top of each other
 		if (ImpulseMath.isEqual(dist,0f))
 		{
+			/*
 			float[] P 	= A.getLinearMotion().getPosition();
 			float[] N 	= VectorMath.create(1f, 0f);
 			float pd 	= radiusA;
 			ContactPoint cp = new ContactPoint(P, N, pd);
 			m.addContactPoint(cp);
-			
+			//*/
 			
 			
 			m.contacts[0] 	= A.getLinearMotion().getPosition();
@@ -54,12 +55,13 @@ public class CircleCircle implements CollisionSolver
 		// if in contact
 		else
 		{
+			/*
 			float[] P 	= VectorMath.project(posA, m.normal, radiusA); // find deepest penetration
 			float[] N 	= VectorMath.normalize(tangent); // normalize tangent
 			float pd 	= radii - dist;
 			ContactPoint cp = new ContactPoint(P, N, pd);
 			m.addContactPoint(cp);
-			
+			//*/
 			
 			
 			m.contacts[0] 	= VectorMath.project(posA, m.normal, radiusA); // find deepest penetration

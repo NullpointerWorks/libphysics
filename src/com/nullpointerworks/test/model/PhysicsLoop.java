@@ -78,7 +78,15 @@ public class PhysicsLoop extends Asap
 				
 				Manifold m = new Manifold(A, B, resting);
 				solve(m, A, B); // TODO refactor - separate manifold and contact points some other time
-				if (m.contact_count > 0) contacts.add(m);
+				if (m.contact_count > 0) 
+				{
+					contacts.add(m);
+					System.out.println(" coll");
+				}
+				else
+				{
+					System.out.println(" no coll");
+				}
 			}
 		}
 		

@@ -30,7 +30,7 @@ public class ImpulseMath
 	 */
 	public static boolean isEqual(float a, float b)
 	{
-		return StrictMath.abs(a - b) <= EPSILON;
+		return StrictMath.abs(a - b) < EPSILON;
 	}
 	
 	/**
@@ -38,7 +38,7 @@ public class ImpulseMath
 	 */
 	public static boolean isZero(float a)
 	{
-		return a <= EPSILON;
+		return StrictMath.abs(a) < EPSILON;
 	}
 	
 	/**

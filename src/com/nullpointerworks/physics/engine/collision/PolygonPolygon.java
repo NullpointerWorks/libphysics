@@ -75,7 +75,7 @@ public class PolygonPolygon implements CollisionSolver
 		// get normal and tangent of the world-space face
 		float[] plane_normal 	= sub(v2, v1);
 		plane_normal 			= normalize(plane_normal);
-		float[] face_normal 	= normal(plane_normal, -1f);
+		float[] face_normal 	= neg(plane_normal); //mul(plane_normal, -1f);
 		
 		// find collision normal
 		float refC 		= dot(face_normal, v1);

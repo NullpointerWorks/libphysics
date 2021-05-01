@@ -56,7 +56,7 @@ public class CanvasRenderCommand implements RenderCommand
 			switch(st)
 			{
 			case Circle: drawCircle(c, canvas); break;
-			case Poly: drawPolygon(c, canvas); break;
+			case Polygon: drawPolygon(c, canvas); break;
 			}
 		}
 		

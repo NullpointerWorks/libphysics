@@ -71,11 +71,6 @@ public class VectorMath
 		return new float[] {v[1], -v[0]};
 	}
 	
-	public static float[] normal(float[] v, float f) 
-	{
-		return new float[] {-f*v[0], -f*v[1]};
-	}
-	
 	public static float[] rotation(float angle)
 	{
 		float cs = (float)Approximate.cos(angle);

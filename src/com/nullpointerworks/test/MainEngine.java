@@ -2,6 +2,8 @@ package com.nullpointerworks.test;
 
 import com.nullpointerworks.physics.PlanetaryGravitation;
 import com.nullpointerworks.physics.engine.Composite;
+import com.nullpointerworks.physics.engine.Shape;
+import com.nullpointerworks.physics.engine.PolygonBuilder;
 import com.nullpointerworks.physics.engine.VectorMath;
 import com.nullpointerworks.physics.engine.material.*;
 import com.nullpointerworks.physics.engine.shape.*;
@@ -39,53 +41,40 @@ public class MainEngine
 		
 		
 		
-		//makeBox(mPhysiscSim, 50f, 200f, new HeavyMaterial(), false);
+		makeBox(mPhysiscSim, 280f, 350f, 0f, new HeavyMaterial(), false);
 		//makeBox(mPhysiscSim, 50f, 0f, new StaticMaterial(), true);
 		
 		
-		makeCirle(mPhysiscSim, 20f, 300f, 300f, new LightMaterial(), false);
-		makeCirle(mPhysiscSim, 100f, 250f, 100f, new StaticMaterial(), true);
-		makeCirle(mPhysiscSim, 100f, 450f, 100f, new StaticMaterial(), true);
+		//makeCirle(mPhysiscSim, 20f, 300f, 300f, new LightMaterial(), false);
+		makeCirle(mPhysiscSim, 100f, 240f, 100f, new StaticMaterial(), true);
+		makeCirle(mPhysiscSim, 100f, 460f, 100f, new StaticMaterial(), true);
 		
 	}
 	
 	private void makeCirle(PhysicsLoop sim, float size, float x, float y, Material mat, boolean immovable) 
 	{
 		Composite circle = new Composite();
-		circle.setMaterial( mat );
 		circle.setShape( new Circle( size ) );
+		circle.setMaterial( mat );
+		circle.setImmovable(immovable);
+		
 		circle.getLinearMotion().setPosition( new float[] {x, y} );
 		
-		circle.setImmovable(immovable);
 		sim.addComposite(circle);
 	}
 	
-	private void makeBox(PhysicsLoop sim, float x, float y, Material mat, boolean immovable) 
+	private void makeBox(PhysicsLoop sim, float x, float y, float r, Material mat, boolean immovable) 
 	{
+		Shape polygon = PolygonBuilder.Box(200f, 40f);
 		
-		float[][] vBox = 
-		{
-			{-100f, 20f},
-			{ 100f, 20f},
-			{ 100f,-20f},
-			{-100f,-20f}
-		};
+		Composite box = new Composite();
+		box.setShape( polygon );
+		box.setMaterial( mat );
+		box.setImmovable(immovable);
 		
-		float[][] nBox = 
-		{
-			{ 1f, 0f},
-			{ 0f,-1f},
-			{-1f, 0f},
-			{ 0f,1f}	
-		};
+		box.getLinearMotion().setPosition( new float[] {x,y} );
+		box.getAngularMotion().setOrientation( r * 0.017452778f ); // 0.01745277777777777777777777777778 = PI / 180 deg
 		
-		Composite immovableBox = new Composite();
-		immovableBox.setShape( new Polygon(vBox, nBox) );
-		immovableBox.setMaterial( mat );
-		immovableBox.getLinearMotion().setPosition( new float[] {x,y} );
-		immovableBox.getAngularMotion().setOrientation( 3.1415f * 0.04f);
-		immovableBox.setImmovable(immovable);
-		
-		sim.addComposite(immovableBox);
+		sim.addComposite(box);
 	}
 }

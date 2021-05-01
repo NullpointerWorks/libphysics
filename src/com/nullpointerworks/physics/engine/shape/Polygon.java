@@ -77,7 +77,7 @@ public class Polygon implements Shape
 	@Override
 	public ShapeType getType() 
 	{
-		return ShapeType.Poly;
+		return ShapeType.Polygon;
 	}
 	
 	@Override

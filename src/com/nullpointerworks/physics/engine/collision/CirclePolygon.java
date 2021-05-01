@@ -10,6 +10,7 @@ import static com.nullpointerworks.physics.engine.VectorMath.dot;
 import static com.nullpointerworks.physics.engine.VectorMath.neg;
 import static com.nullpointerworks.physics.engine.VectorMath.project;
 import static com.nullpointerworks.physics.engine.VectorMath.normalize;
+import static com.nullpointerworks.physics.engine.VectorMath.normal;
 
 import com.nullpointerworks.physics.engine.CollisionSolver;
 import com.nullpointerworks.physics.engine.Composite;
@@ -35,7 +36,7 @@ public class CirclePolygon implements CollisionSolver
 		float[] norm,vc;
 		float radiusA = shapeA.getRadius(), dist;
 		int v_count = verticesB.length;
-
+		
 		float[] Aposition = A.getLinearMotion().getPosition();
 		float[] Bposition = B.getLinearMotion().getPosition();
 		
@@ -61,7 +62,7 @@ public class CirclePolygon implements CollisionSolver
 		// if the biggest positive separation is beyond the radius, return. no collision
 		if (separation > radiusA) return;
 		
-		// check to see if the center of the circle in inside the polygon
+		// check to see if the center of the circle is inside the polygon
 		if (separation < ImpulseMath.EPSILON)
 		{
 			norm = normalsB[face_normal];
