@@ -81,7 +81,7 @@ public class PhysicsLoop extends Asap
 				
 				Manifold m = new Manifold(A,B,resting);
 				m.solve();
-				if (m.hasContacts())
+				if (m.contact_count > 0)
 				{
 					contacts.add(m);
 				}

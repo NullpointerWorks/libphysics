@@ -4,6 +4,7 @@ import com.nullpointerworks.physics.engine.CollisionSolver;
 import com.nullpointerworks.physics.engine.Composite;
 import com.nullpointerworks.physics.engine.ImpulseMath;
 import com.nullpointerworks.physics.engine.VectorMath;
+import com.nullpointerworks.physics.engine.manifold.ContactPoint;
 import com.nullpointerworks.physics.engine.manifold.Manifold;
 import com.nullpointerworks.physics.engine.shape.Circle;
 
@@ -33,22 +34,30 @@ public class CircleCircle implements CollisionSolver
 			return;
 		}
 		
+		m.contact_count = 1;
+		
 		// if circles are exactly on top of each other
 		if (ImpulseMath.equal(dist,0f))
 		{
-			// drive the two circles away in some direction.
-			m.contact_count = 1;
+			float[] P = A.getLinearMotion().getPosition();
+			float[] N = VectorMath.create(1f, 0f);
+			
+			ContactPoint c = new ContactPoint(P, N, radiusA);
+			
+			
 			m.contacts[0] 	= A.getLinearMotion().getPosition();
-			m.normal 		= VectorMath.create(1f, 0f);
+			m.normal 		= VectorMath.create(1f, 0f); // drive the two circles away in some arbitrary direction.
 			m.penetration 	= radiusA;
+			
+			
+			
 		}
-		// if partially overlapping
+		// if in contact
 		else
 		{
-			m.contact_count = 1;
-			m.penetration 	= radii - dist;
-			m.normal 		= VectorMath.mul(tangent, 1f/dist); // normalize tangent
 			m.contacts[0] 	= VectorMath.project(posA, m.normal, radiusA); // find deepest penetration
+			m.normal 		= VectorMath.normalize(tangent); // normalize tangent
+			m.penetration 	= radii - dist;
 		}
 	}
 }

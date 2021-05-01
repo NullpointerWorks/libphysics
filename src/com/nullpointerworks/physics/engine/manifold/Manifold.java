@@ -4,6 +4,10 @@ import static com.nullpointerworks.physics.engine.VectorMath.create;
 import static com.nullpointerworks.physics.engine.VectorMath.normal;
 import static com.nullpointerworks.physics.engine.VectorMath.normalize;
 import static com.nullpointerworks.physics.engine.VectorMath.sub;
+
+import java.util.ArrayList;
+import java.util.List;
+
 import static com.nullpointerworks.physics.engine.VectorMath.dot;
 import static com.nullpointerworks.physics.engine.VectorMath.mul;
 import static com.nullpointerworks.physics.engine.VectorMath.neg;
@@ -21,11 +25,14 @@ public class Manifold
 	private final Composite A, B;
 	private final float resting;
 	
-	public int contact_count;
-	public float penetration;
+	private List<ContactPoint> contactpoints;
+	
 	public float restitution;
 	public float sFriction;
 	public float kFriction;
+	
+	public float penetration;
+	public int contact_count;
 	public float[] normal;
 	public float[][] contacts;
 	
@@ -34,17 +41,15 @@ public class Manifold
 		this.A = A; 
 		this.B = B;
 		this.resting = resting;
+		contactpoints = new ArrayList<ContactPoint>();
 		
 		normal 		= new float[] {0f,0f};
 		contacts 	= new float[][] {{0f,0f}, {0f,0f}};
 	}
 	
-	/**
-	 * Call the collision checker and solve for the given compositions
-	 */
-	public void solve()
+	public void addContactPoint(ContactPoint cp)
 	{
-		Collision.solve(this, A, B);
+		contactpoints.add(cp);
 	}
 	
 	/**
@@ -53,7 +58,15 @@ public class Manifold
 	 */
 	public boolean hasContacts()
 	{
-		return contact_count > 0;
+		return contactpoints.size() > 0;
+	}
+	
+	/**
+	 * Call the collision checker and solve for the given compositions
+	 */
+	public void solve()
+	{
+		Collision.solve(this, A, B);
 	}
 	
 	/**
