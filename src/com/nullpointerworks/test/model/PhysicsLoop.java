@@ -81,11 +81,6 @@ public class PhysicsLoop extends Asap
 				if (m.contact_count > 0) 
 				{
 					contacts.add(m);
-					System.out.println(" coll");
-				}
-				else
-				{
-					System.out.println(" no coll");
 				}
 			}
 		}

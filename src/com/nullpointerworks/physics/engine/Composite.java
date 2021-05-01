@@ -231,7 +231,7 @@ public class Composite
 	private void setMass(float m)
 	{
 		mass = m;
-		inv_mass = (m==0.0f)? 0.0f: 1f/m;
+		inv_mass = (m==0.0f)? Float.MAX_VALUE: 1f/m;
 	}
 	
 	/**
@@ -243,6 +243,6 @@ public class Composite
 	private void setInertia(float Ip)
 	{
 		inertia = Ip;
-		inv_inertia = (Ip==0.0f)? 0.0f: 1f/Ip;
+		inv_inertia = (Ip==0.0f)? Float.MAX_VALUE: 1f/Ip;
 	}
 }
