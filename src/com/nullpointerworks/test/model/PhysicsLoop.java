@@ -4,7 +4,7 @@ import static com.nullpointerworks.physics.engine.VectorMath.mul;
 import static com.nullpointerworks.physics.engine.VectorMath.project;
 import static com.nullpointerworks.physics.engine.Collision.solve;
 import static com.nullpointerworks.physics.engine.ImpulseMath.getRestingConstant;
-import static com.nullpointerworks.physics.engine.ImpulseMath.equal;
+import static com.nullpointerworks.physics.engine.ImpulseMath.isZero;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -60,8 +60,6 @@ public class PhysicsLoop extends Asap
 	@Override
 	public synchronized void onUpdate(double dt) 
 	{
-		contacts.clear();
-		
 		float resting = getRestingConstant(gravityVector, (float)dt);
 		
 		int lb = bodies.size();
@@ -76,15 +74,11 @@ public class PhysicsLoop extends Asap
 				if (A.contains(B)) continue;
 				if (B.contains(A)) continue;
 				if (A.isImmovable() && B.isImmovable()) continue;
-				if (equal(A.inv_mass + B.inv_mass, 0f)) continue;
+				if (isZero(A.inv_mass + B.inv_mass)) continue;
 				
 				Manifold m = new Manifold(A, B, resting);
-				solve(m, A, B);
-				
-				if (m.contact_count > 0)
-				{
-					contacts.add(m);
-				}
+				solve(m, A, B); // TODO refactor - separate manifold and contact points some other time
+				if (m.contact_count > 0) contacts.add(m);
 			}
 		}
 		
@@ -121,6 +115,7 @@ public class PhysicsLoop extends Asap
 		{
 			C.clear();
 		}
+		contacts.clear();
 	}
 	
 	@Override
@@ -158,7 +153,7 @@ public class PhysicsLoop extends Asap
 		v = project(v, gravityVector, dt);
 		
 		// calculate change in angular velocity 
-		// w = T/Ip * dt = torque divided by moment of inertia times delta-time
+		// w = T/Ip * dt = omega = torque divided by moment of inertia times delta-time
 		a = a + b.torque * b.inv_inertia * dt;
 		
 		b.getLinearMotion().setVelocity(v);
@@ -172,12 +167,10 @@ public class PhysicsLoop extends Asap
 	{
 		if (b.isImmovable()) return;
 		
-		// Euler integration
-		integrateForces(b,dt);
+		integrateForces(b,dt); // Euler integration
 		
 		float[] lP 	= b.getLinearMotion().getPosition();
 		float[] lV	= b.getLinearMotion().getVelocity();
-		
 		float aO 	= b.getAngularMotion().getOrientation();
 		float aV	= b.getAngularMotion().getVelocity();
 		

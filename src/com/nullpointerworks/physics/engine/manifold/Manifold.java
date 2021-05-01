@@ -23,7 +23,6 @@ public class Manifold
 {
 	private final Composite A, B;
 	private final float resting;
-	
 	private List<ContactPoint> contactpoints;
 	
 	public float restitution;
@@ -109,7 +108,7 @@ public class Manifold
 		float inv_massB = B.inv_mass;
 		
 		// check if the masses are infinite. Skip moving by impulse
-		if (ImpulseMath.equal(inv_massA + inv_massB, 0.0f))
+		if (ImpulseMath.isEqual(inv_massA + inv_massB, 0.0f))
 		{
 			A.getLinearMotion().setVelocity( create(0f,0f) );
 			B.getLinearMotion().setVelocity( create(0f,0f) );
@@ -165,7 +164,7 @@ public class Manifold
 			jt /= (invMassSum * (float)contact_count);
 			
 			// if tangent impulse is practically 0, don't do anything 
-			if (ImpulseMath.equal(jt, 0.0f)) continue;
+			if (ImpulseMath.isEqual(jt, 0.0f)) continue;
 				
 			// apply Coulumb's law for friction
 			if (StrictMath.abs(jt) < j*sFriction)

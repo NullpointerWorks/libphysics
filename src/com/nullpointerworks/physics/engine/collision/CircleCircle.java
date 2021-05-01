@@ -37,7 +37,7 @@ public class CircleCircle implements CollisionSolver
 		m.contact_count = 1;
 		
 		// if circles are exactly on top of each other
-		if (ImpulseMath.equal(dist,0f))
+		if (ImpulseMath.isEqual(dist,0f))
 		{
 			float[] P 	= A.getLinearMotion().getPosition();
 			float[] N 	= VectorMath.create(1f, 0f);

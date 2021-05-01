@@ -1,6 +1,6 @@
 package com.nullpointerworks.physics.engine.collision;
 
-import static com.nullpointerworks.physics.engine.ImpulseMath.gt;
+import static com.nullpointerworks.physics.engine.ImpulseMath.bias;
 import static com.nullpointerworks.physics.engine.MatrixMath.rotation;
 import static com.nullpointerworks.physics.engine.MatrixMath.transform;
 import static com.nullpointerworks.physics.engine.MatrixMath.transpose;
@@ -38,7 +38,7 @@ public class PolygonPolygon implements CollisionSolver
 		if (penetrationB >= 0.0f) return;
 		
 		// find the face of incidence
-		if (gt(penetrationA, penetrationB))
+		if (bias(penetrationA, penetrationB))
 		{
 			solve(m,A,B, face_a[0],false);
 		}

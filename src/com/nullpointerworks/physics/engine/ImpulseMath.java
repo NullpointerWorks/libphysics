@@ -28,15 +28,23 @@ public class ImpulseMath
 	/**
 	 * true if the given values are close enough together.
 	 */
-	public static boolean equal(float a, float b)
+	public static boolean isEqual(float a, float b)
 	{
 		return StrictMath.abs(a - b) <= EPSILON;
 	}
 	
 	/**
-	 * 
+	 * true if the given values are close enough together.
 	 */
-	public static boolean gt(float a, float b)
+	public static boolean isZero(float a)
+	{
+		return a <= EPSILON;
+	}
+	
+	/**
+	 * gt
+	 */
+	public static boolean bias(float a, float b)
 	{
 		return (b * BIAS_RELATIVE + a * BIAS_ABSOLUTE) < a;
 	}
