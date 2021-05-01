@@ -15,7 +15,6 @@ import static com.nullpointerworks.physics.engine.VectorMath.cross;
 import static com.nullpointerworks.physics.engine.VectorMath.project;
 
 import com.nullpointerworks.math.FloatMath;
-import com.nullpointerworks.physics.engine.Collision;
 import com.nullpointerworks.physics.engine.Composite;
 import com.nullpointerworks.physics.engine.ImpulseMath;
 import com.nullpointerworks.physics.engine.material.Material;
