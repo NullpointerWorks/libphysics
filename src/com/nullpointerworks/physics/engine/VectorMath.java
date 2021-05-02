@@ -19,6 +19,11 @@ public class VectorMath
 		return new float[] {-v[0], -v[1]};
 	}
 	
+	public static float[] normal(float[] v) 
+	{
+		return new float[] {-v[1], v[0]};
+	}
+	
 	public static float[] add(float[] a, float[] b)
 	{
 		return new float[]{	a[0]+b[0],
@@ -64,11 +69,6 @@ public class VectorMath
 		float m = magnitude(a);
 		float invm = 1f / m;
 		return new float[]{	x*invm, y*invm};
-	}
-	
-	public static float[] normal(float[] v) 
-	{
-		return new float[] {v[1], -v[0]};
 	}
 	
 	public static float[] rotation(float angle)

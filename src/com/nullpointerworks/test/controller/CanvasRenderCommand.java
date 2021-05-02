@@ -2,6 +2,7 @@ package com.nullpointerworks.test.controller;
 
 import static com.nullpointerworks.physics.engine.VectorMath.project;
 import static com.nullpointerworks.physics.engine.VectorMath.add;
+import static com.nullpointerworks.physics.engine.VectorMath.mul;
 import static com.nullpointerworks.physics.engine.MatrixMath.rotation;
 import static com.nullpointerworks.physics.engine.MatrixMath.transform;
 
@@ -73,47 +74,57 @@ public class CanvasRenderCommand implements RenderCommand
 		P[1] = viewHeight - P[1];
 		V[1] = -V[1];
 		
-		circle(P, r, WHITE, canvas);
-		
-		//float a 	= e.orientation;
-		//float[] J = project(P, rotation(a), r);
-		//line(P, J, CYAN, canvas);
-		
-		float[] J = project(P, V, 1f);
-		line(P, J, RED, canvas);
+		circle(P,r,WHITE,canvas);
+		drawVector(P,V,RED,canvas);
 	}
 	
 	private void drawPolygon(Composite c, IntBuffer canvas)
 	{
-		Polygon poly = (Polygon)c.getShape();
-		float[][] v = poly.getVertices();
-		float[] p = c.getLinearMotion().getPosition();
-		float[] V = c.getLinearMotion().getVelocity();
-		float r = c.getAngularMotion().getOrientation();
+		Polygon poly 	= (Polygon)c.getShape();
+		float[][] v 	= poly.getVertices();
+		float[][] n 	= poly.getNormals();
+		float[] p 		= c.getLinearMotion().getPosition();
+		float[] V 		= c.getLinearMotion().getVelocity();
+		float r 		= c.getAngularMotion().getOrientation();
 		
 		float[][] rMatrix = rotation(r);
 		v = transform(rMatrix,v);
+		n = transform(rMatrix,n);
 		
 		float[] b1 = v[0];
+		float[] normal = n[0];
 		for (int i=1,l=v.length; i<=l; i++)
 		{
 			float[] b2 = v[i%l];
 			float[] a = add(b1,p);
 			float[] b = add(b2,p);
 			
+			// draw hull
 			a[1] = viewHeight - a[1];
 			b[1] = viewHeight - b[1];
-			
 			line(a,b,WHITE,canvas);
+			
+			// draw normal
+			normal = mul(normal, 20f);
+			normal[1] = -normal[1];
+			drawVector(a,normal,CYAN,canvas);
+			
+			normal = n[i%l];
 			b1 = b2;
 		}
-
+		
+		// draw velocity
 		p[1] = viewHeight - p[1];
 		V[1] = -V[1];
-		float[] J = project(p, V, 1f);
-		line(p, J, RED, canvas);
+		drawVector(p,V,RED,canvas);
 	}
 	
+	private void drawVector(float[] org, float[] vec, int color, IntBuffer canvas) 
+	{
+		float[] p = project(org, vec, 1f);
+		line(org, p, color, canvas);
+	}
+
 	private void line(float[] p, float[] j, int c, IntBuffer s) 
 	{
 		int x1 = (int)(p[0]+0.5f);

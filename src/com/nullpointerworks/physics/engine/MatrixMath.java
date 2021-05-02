@@ -22,10 +22,10 @@ public class MatrixMath
 
 	public static float[] transform(float[][] m, float[] v)
 	{
-		float[] m1 = m[0];
-		float[] m2 = m[1];
-		float vx = m1[0]*v[0] + m1[1]*v[1];
-		float vy = m2[0]*v[0] + m2[1]*v[1];
+		float[] m0 = m[0];
+		float[] m1 = m[1];
+		float vx = m0[0]*v[0] + m0[1]*v[1];
+		float vy = m1[0]*v[0] + m1[1]*v[1];
 		return new float[] {vx,vy};
 	}
 

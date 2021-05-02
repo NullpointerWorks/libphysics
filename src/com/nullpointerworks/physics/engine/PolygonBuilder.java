@@ -17,42 +17,19 @@ public class PolygonBuilder
 	{
 		float hw = width*0.5f;
 		float hh = height*0.5f;
-		float[][] v = { {-hw,-hh},
-						{ hw,-hh},
+		float[][] v = { {-hw, hh},
 						{ hw, hh},
-						{-hw, hh}};
+						{ hw,-hh},
+						{-hw,-hh}};
 		return Polygon(v);
-	}
-	
-	/**
-	 * 
-	 */
-	public static Shape Polygon(float[][] verts)
-	{
-		int vertices = verts.length;
-		float[][] n = new float[vertices][];
-		
-		// calculate normals, and convert to unit vectors
-		for (int i=0; i<vertices; i++)
-		{
-			float[] p0 = verts[i];
-			float[] p1 = verts[(i+1)%vertices];
-			
-			float[] norm = sub(p0, p1);
-			norm = normal(norm);
-			n[i] = normalize(norm);
-		}
-		
-		return new Polygon(verts,n);
 	}
 	
 	/**
 	 * make a composition with the shape of the hull around the given set of points.<br>
 	 * this shape will always be a convex polygon.
 	 */
-	public static Composite Hull(float[][] verts)
+	public static Shape Hull(float[][] verts)
 	{
-		Composite c = new Composite();
 		int vertices;
 		
 		// find the most right vertex
@@ -136,28 +113,35 @@ public class PolygonBuilder
 			}
 		}
 		
-		// compile all vertices that comprise the hull
+		// copy all vertices that comprise the hull
 		float[][] v = new float[vertices][];
-		float[][] n = new float[vertices][];
-		
-		// copy vertices
 		for (int i=0; i<vertices; i++)
 		{
 			v[i] = verts[ hull[i] ];
 		}
 		
+		return Polygon(v);
+	}
+	
+	/**
+	 * 
+	 */
+	public static Shape Polygon(float[][] verts)
+	{
+		int vertices = verts.length;
+		float[][] n = new float[vertices][];
+		
 		// calculate normals, and convert to unit vectors
 		for (int i=0; i<vertices; i++)
 		{
-			float[] p0 = v[i];
-			float[] p1 = v[(i+1)%vertices];
+			float[] p0 = verts[i];
+			float[] p1 = verts[(i+1)%vertices];
 			
-			float[] norm = sub(p0, p1);
+			float[] norm = sub(p1, p0); // sub(p0, p1);
 			norm = normal(norm);
 			n[i] = normalize(norm);
 		}
 		
-		c.setShape( new Polygon(v,n) );
-		return c;
+		return new Polygon(verts,n);
 	}
 }

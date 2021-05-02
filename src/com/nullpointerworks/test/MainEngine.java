@@ -41,7 +41,7 @@ public class MainEngine
 		
 		
 		
-		makeBox(mPhysiscSim, 280f, 350f, 0f, new HeavyMaterial(), false);
+		makeBox(mPhysiscSim, 280f, 350f, 10f, new HeavyMaterial(), false);
 		//makeBox(mPhysiscSim, 50f, 0f, new StaticMaterial(), true);
 		
 		
