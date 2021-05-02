@@ -9,6 +9,7 @@ import static com.nullpointerworks.physics.engine.VectorMath.sub;
 import static com.nullpointerworks.physics.engine.VectorMath.dot;
 import static com.nullpointerworks.physics.engine.VectorMath.neg;
 import static com.nullpointerworks.physics.engine.VectorMath.project;
+import static com.nullpointerworks.physics.engine.VectorMath.magnitude;
 import static com.nullpointerworks.physics.engine.VectorMath.normalize;
 import static com.nullpointerworks.physics.engine.VectorMath.normal;
 
@@ -89,7 +90,6 @@ public class CirclePolygon implements CollisionSolver
 			float[] v2 = verticesB[(face_normal+1)%v_count];
 			
 			m.contact_count = 1;
-			m.penetration = radiusA - separation;
 			
 			// dot product vertex projection
 			// t = q*a / a*a without the divide. if less than 0, closest on one side
@@ -111,7 +111,7 @@ public class CirclePolygon implements CollisionSolver
 				
 				m.normal = normalize(vc);
 				m.contacts[0] = add(positionB, v);
-				m.penetration *= 0.1f;
+				m.penetration = radiusA - separation; //magnitude( sub(center,v1) );
 				return;
 			}
 			
@@ -130,23 +130,22 @@ public class CirclePolygon implements CollisionSolver
 				
 				m.normal = normalize(vc);
 				m.contacts[0] = add(positionB, v);
-				m.penetration *= 0.1f;
-				
+				m.penetration = radiusA - separation; //magnitude( sub(center,v2) );
 				return;
 			}
 			
 			// is inside the voronoi region
 			// in other words, the circle is hitting a face of the polygon
-			float[] n = normalsB[face_normal];
-			
-			float[] norm = sub(center,v1);
-			float dist = dot(norm , n);
+			float[] n 		= normalsB[face_normal];
+			float[] norm 	= sub(center,v1);
+			float dist 		= dot(norm, n);
 			if (dist > radiusA) return;
 			
-			norm = transform(rotationB, n );
+			norm = transform(rotationB, n);
 			norm = neg(norm);
 			m.normal = normalize(norm);
 			m.contacts[0] = project(positionA, m.normal, radiusA);
+			m.penetration = radiusA - separation;
 		}
 	}
 }
