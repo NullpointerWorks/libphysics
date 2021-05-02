@@ -58,7 +58,7 @@ public class PolygonPolygon implements CollisionSolver
 		float[][] incFace = new float[2][];
 		IncidentFace(incFace, R, I, reference_index);
 		
-		float[][] refVertices	= shapeR.vertices;
+		float[][] refVertices	= shapeR.getVertices();
 		float[][] refMatrix 	= rotation( R.getAngularMotion().getOrientation() );
 		int l = refVertices.length;
 		
@@ -136,9 +136,9 @@ public class PolygonPolygon implements CollisionSolver
 		float best_dist = -Float.MAX_VALUE;
 		int best_index 	= 0;
 
-		float[][] verticesA	= shapeA.vertices;
-		float[][] verticesB	= shapeB.vertices;
-		float[][] normals 	= shapeA.normals;
+		float[][] verticesA	= shapeA.getVertices();
+		float[][] verticesB	= shapeB.getVertices();
+		float[][] normals 	= shapeA.getNormals();
 		
 		float[][] rotationA = rotation( A.getAngularMotion().getOrientation() );
 		float[][] rotationB = rotation( B.getAngularMotion().getOrientation() );
@@ -208,7 +208,7 @@ public class PolygonPolygon implements CollisionSolver
 		Polygon incPoly = (Polygon)I.getShape();
 		
 		float[][] refMatrix 	= rotation( R.getAngularMotion().getOrientation() );
-		float[] ref_normal 		= refPoly.normals[index];
+		float[] ref_normal 		= refPoly.getNormals()[index];
 		
 		float[][] incMatrix 	= rotation( I.getAngularMotion().getOrientation() );
 		float[] incPosition 	= I.getLinearMotion().getPosition();
@@ -222,8 +222,8 @@ public class PolygonPolygon implements CollisionSolver
 		int incident_face = 0;
 		float min_dot = Float.MAX_VALUE;
 		
-		float[][] vertices 	= incPoly.vertices;
-		float[][] normals 	= incPoly.normals;
+		float[][] vertices 	= incPoly.getVertices();
+		float[][] normals 	= incPoly.getNormals();
 		
 		int l = vertices.length;
 		for (int i=0; i<l; i++)

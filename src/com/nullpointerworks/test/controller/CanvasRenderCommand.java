@@ -86,7 +86,7 @@ public class CanvasRenderCommand implements RenderCommand
 	private void drawPolygon(Composite c, IntBuffer canvas)
 	{
 		Polygon poly = (Polygon)c.getShape();
-		float[][] v = poly.vertices;
+		float[][] v = poly.getVertices();
 		float[] p = c.getLinearMotion().getPosition();
 		float[] V = c.getLinearMotion().getVelocity();
 		float r = c.getAngularMotion().getOrientation();

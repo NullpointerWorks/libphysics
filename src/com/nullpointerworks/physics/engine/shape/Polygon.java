@@ -10,8 +10,8 @@ public class Polygon implements Shape
 {
 	private float area;
 	private float I; // moment of inertia
-	public float[][] vertices;
-	public float[][] normals;
+	private float[][] vertices;
+	private float[][] normals;
 	
 	/**
 	 * convex polygon
@@ -54,6 +54,16 @@ public class Polygon implements Shape
 			area += z;
 		}
 		area *= 0.5f;
+	}
+	
+	public float[][] getVertices()
+	{
+		return (vertices);
+	}
+
+	public float[][] getNormals()
+	{
+		return (normals);
 	}
 	
 	@Override

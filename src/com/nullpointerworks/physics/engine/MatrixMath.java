@@ -2,7 +2,6 @@ package com.nullpointerworks.physics.engine;
 
 public class MatrixMath 
 {
-
 	/**
 	 * get the rotation matrix from the given rotations
 	 */

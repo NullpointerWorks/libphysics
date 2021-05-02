@@ -14,7 +14,6 @@ import static com.nullpointerworks.physics.engine.VectorMath.normal;
 
 import com.nullpointerworks.physics.engine.CollisionSolver;
 import com.nullpointerworks.physics.engine.Composite;
-import com.nullpointerworks.physics.engine.ImpulseMath;
 import com.nullpointerworks.physics.engine.manifold.Manifold;
 import com.nullpointerworks.physics.engine.shape.Circle;
 import com.nullpointerworks.physics.engine.shape.Polygon;
@@ -24,34 +23,38 @@ public class CirclePolygon implements CollisionSolver
 	@Override
 	public void solve(Manifold m, Composite A, Composite B) 
 	{
-		Circle shapeA 	= (Circle)A.getShape();
-		Polygon shapeB 	= (Polygon)B.getShape();
+		Circle shapeA 			= (Circle)A.getShape();
+		Polygon shapeB 			= (Polygon)B.getShape();
 		
-		float[][] rotation 	= rotation( B.getAngularMotion().getOrientation() );
-		float[][] transpose = transpose(rotation);
+		float[] Aposition 		= A.getLinearMotion().getPosition();
+		float[] Bposition 		= B.getLinearMotion().getPosition();
+		float Borientation 		= B.getAngularMotion().getOrientation();
 		
-		float[][] verticesB = shapeB.vertices;
-		float[][] normalsB 	= shapeB.normals;
+		float Aradius 			= shapeA.getRadius();
+		float[][] Bvertices 	= shapeB.getVertices();
+		float[][] Bnormals 		= shapeB.getNormals();
 		
-		float[] norm,vc;
-		float radiusA = shapeA.getRadius(), dist;
-		int v_count = verticesB.length;
+		float[][] rotation 		= rotation(Borientation);
+		float[][] transpose 	= transpose(rotation);
 		
-		float[] Aposition = A.getLinearMotion().getPosition();
-		float[] Bposition = B.getLinearMotion().getPosition();
+		float dist;
+		int v_count = Bvertices.length;
 		
 		m.contact_count = 0;
 		
 		// move circle center vector to the polygon's model space
 		float[] center = transform(transpose, sub(Aposition, Bposition) );
 		
-		// find the face with the penetration penetration
+		// find the face with the closest penetration
 		// normals must be normalized
 		int face_normal = 0;
 		float separation = 0f;
 		for (int i=0; i<v_count; i++)
 		{
-			float s = dot(normalsB[i], sub(center, verticesB[i]) );
+			float[] vert = Bvertices[i];
+			float[] norm = Bnormals[i];
+			
+			float s = dot(norm, sub(center, vert) );
 			if (s > separation)
 			{
 				separation = s;
@@ -60,32 +63,34 @@ public class CirclePolygon implements CollisionSolver
 		}
 		
 		// if the biggest positive separation is beyond the radius, return. no collision
-		if (separation > radiusA) 
+		if (separation > Aradius) 
 		{
 			return;
 		}
+
+		float[] norm,vc;
 		
 		// check to see if the center of the circle is inside the polygon
-		if (separation < ImpulseMath.EPSILON)
+		if (separation < 0f)
 		{
-			norm = normalsB[face_normal];
+			norm = Bnormals[face_normal];
 			norm = transform(rotation, norm);
 			m.normal = neg(norm);
 			m.contact_count = 1;
-			m.penetration = radiusA;
-			m.contacts[0] = project(Aposition, m.normal, radiusA);
+			m.penetration = Aradius;
+			m.contacts[0] = project(Aposition, m.normal, Aradius);
 			return;
 		}
 		
 		// get face vertices
-		float[] v1 = verticesB[face_normal];
-		float[] v2 = verticesB[(face_normal+1)%v_count];
+		float[] v1 = Bvertices[face_normal];
+		float[] v2 = Bvertices[(face_normal+1)%v_count];
 		
 		// find the region(voronoi) of the face on the polygon
 		
 		float dot1 = dot( sub(center,v1) , sub(v2,v1) );
 		float dot2 = dot( sub(center,v2) , sub(v1,v2) );
-		m.penetration = radiusA - separation;
+		m.penetration = Aradius - separation;
 		m.contact_count = 1;
 		
 		// dot product vertex projection
@@ -97,7 +102,7 @@ public class CirclePolygon implements CollisionSolver
 			m.penetration *= 0.1f;
 			
 			vc = sub(v1, center); // get tangent
-			if (dot(vc, vc) > radiusA*radiusA) return;
+			if (dot(vc, vc) > Aradius*Aradius) return;
 			
 			// rotate vector to polygon world space
 			vc = transform(rotation, vc);
@@ -115,7 +120,7 @@ public class CirclePolygon implements CollisionSolver
 			m.penetration *= 0.1f;
 			
 			vc = sub(v2, center); // get tangent
-			if (dot(vc, vc) > radiusA*radiusA) return;
+			if (dot(vc, vc) > Aradius*Aradius) return;
 			
 			// rotate vector to polygon world space
 			vc = transform(rotation, vc);
@@ -128,15 +133,15 @@ public class CirclePolygon implements CollisionSolver
 		}
 		
 		// is inside the voronoi region
-		float[] n = normalsB[face_normal];
+		float[] n = Bnormals[face_normal];
 		
 		norm = sub(center,v1);
 		dist = dot(norm , n);
-		if (dist > radiusA) return;
+		if (dist > Aradius) return;
 		
 		norm = transform(rotation, n );
 		norm = neg(norm);
 		m.normal = normalize(norm);
-		m.contacts[0] = project(Aposition, m.normal, radiusA);
+		m.contacts[0] = project(Aposition, m.normal, Aradius);
 	}
 }
