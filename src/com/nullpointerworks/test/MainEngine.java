@@ -41,11 +41,11 @@ public class MainEngine
 		
 		
 		
-		makeBox(mPhysiscSim, 280f, 350f, 10f, new HeavyMaterial(), false);
+		//makeBox(mPhysiscSim, 280f, 350f, 10f, new HeavyMaterial(), false);
 		//makeBox(mPhysiscSim, 50f, 0f, new StaticMaterial(), true);
 		
 		
-		//makeCirle(mPhysiscSim, 20f, 300f, 300f, new LightMaterial(), false);
+		makeCirle(mPhysiscSim, 20f, 300f, 300f, new LightMaterial(), false);
 		makeCirle(mPhysiscSim, 100f, 240f, 100f, new StaticMaterial(), true);
 		makeCirle(mPhysiscSim, 100f, 460f, 100f, new StaticMaterial(), true);
 		

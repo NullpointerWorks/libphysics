@@ -27,7 +27,7 @@ public class CirclePolygon implements CollisionSolver
 		Circle shapeA 			= (Circle)A.getShape();
 		float[] positionA 		= A.getLinearMotion().getPosition();
 		float radiusA 			= shapeA.getRadius();
-
+		
 		Polygon shapeB 			= (Polygon)B.getShape();
 		float[] positionB 		= B.getLinearMotion().getPosition();
 		float orientationB 		= B.getAngularMotion().getOrientation();
@@ -111,7 +111,7 @@ public class CirclePolygon implements CollisionSolver
 				
 				m.normal = normalize(vc);
 				m.contacts[0] = add(positionB, v);
-				m.penetration = radiusA - separation; //magnitude( sub(center,v1) );
+				m.penetration = (radiusA - separation)*0.1f; //magnitude( sub(center,v1) );
 				return;
 			}
 			
@@ -130,7 +130,7 @@ public class CirclePolygon implements CollisionSolver
 				
 				m.normal = normalize(vc);
 				m.contacts[0] = add(positionB, v);
-				m.penetration = radiusA - separation; //magnitude( sub(center,v2) );
+				m.penetration = (radiusA - separation) *0.1f; //magnitude( sub(center,v2) );
 				return;
 			}
 			

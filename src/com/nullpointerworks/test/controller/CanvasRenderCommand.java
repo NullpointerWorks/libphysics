@@ -121,7 +121,7 @@ public class CanvasRenderCommand implements RenderCommand
 	
 	private void drawVector(float[] org, float[] vec, int color, IntBuffer canvas) 
 	{
-		float[] p = project(org, vec, 1f);
+		float[] p = project(org, vec, 0.5f);
 		line(org, p, color, canvas);
 	}
 

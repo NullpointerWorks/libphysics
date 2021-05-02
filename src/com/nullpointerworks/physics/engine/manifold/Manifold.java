@@ -71,24 +71,24 @@ public class Manifold
 		restitution = FloatMath.min(matA.getRestitution(), matB.getRestitution());
 		sFriction = FloatMath.pythagoras(matA.getStaticFriction(), matB.getStaticFriction());
 		kFriction = FloatMath.pythagoras(matA.getKineticFriction(), matB.getKineticFriction());
+
+		// get translation information
+		final float[] posA = A.getLinearMotion().getPosition();
+		final float[] velA = A.getLinearMotion().getVelocity();
+		final float avalA = A.getAngularMotion().getVelocity();
+		
+		final float[] posB = B.getLinearMotion().getPosition();
+		final float[] velB = B.getLinearMotion().getVelocity();
+		final float avalB = B.getAngularMotion().getVelocity();
 		
 		// for each contact point: see if its colliding, or resting on a surface
 		for (float[] contact : contacts) 
 		{
-			float[] Apos = A.getLinearMotion().getPosition();
-			float[] Avel = A.getLinearMotion().getVelocity();
-			float Aavel = A.getAngularMotion().getVelocity();
-			
-			float[] Bpos = B.getLinearMotion().getPosition();
-			float[] Bvel = B.getLinearMotion().getVelocity();
-			float Bavel = B.getAngularMotion().getVelocity();
-			
-			float[] relativeA = sub(contact, Apos);
-			float[] relativeB = sub(contact, Bpos);
-			
-			float[] relativeV = project(Bvel, normal(relativeB), Bavel );
-			relativeV = sub(relativeV, Avel);
-			relativeV = project(relativeV, normal(relativeA), -Aavel );
+			float[] relativeA = sub(contact, posA);
+			float[] relativeB = sub(contact, posB);
+			float[] relativeV = project(velB, normal(relativeB), avalB );
+			relativeV = sub(relativeV, velA);
+			relativeV = project(relativeV, normal(relativeA), -avalA );
 			
 			float m = dot(relativeV,relativeV); // square distance
 			if (m < resting) 
@@ -104,38 +104,39 @@ public class Manifold
 	 */
 	public void applyImpulse()
 	{
-		float inv_massA = A.inv_mass;
-		float inv_massB = B.inv_mass;
+		final float inv_massA = A.inv_mass;
+		final float inv_massB = B.inv_mass;
 		
 		// check if the masses are infinite. Skip moving by impulse
-		if (ImpulseMath.isEqual(inv_massA + inv_massB, 0.0f))
+		if (ImpulseMath.isZero(inv_massA + inv_massB))
 		{
 			A.getLinearMotion().setVelocity( create(0f,0f) );
 			B.getLinearMotion().setVelocity( create(0f,0f) );
 			return;
 		}
 		
+		// get translation information
+		final float[] posA = A.getLinearMotion().getPosition();
+		final float[] velA = A.getLinearMotion().getVelocity();
+		final float avalA = A.getAngularMotion().getVelocity();
+		
+		final float[] posB = B.getLinearMotion().getPosition();
+		final float[] velB = B.getLinearMotion().getVelocity();
+		final float avalB = B.getAngularMotion().getVelocity();
+		
 		// for each contact point
 		for (float[] contact : contacts)
 		{
-			float[] posA = A.getLinearMotion().getPosition();
-			float[] velA = A.getLinearMotion().getVelocity();
-			float avalA = A.getAngularMotion().getVelocity();
-			
-			float[] posB = B.getLinearMotion().getPosition();
-			float[] velB = B.getLinearMotion().getVelocity();
-			float avalB = B.getAngularMotion().getVelocity();
-			
-			// recalculate relative velocities with respect to contact point
+			// calculate relative velocities with respect to contact point
 			float[] relativeA = sub(contact, posA);
 			float[] relativeB = sub(contact, posB);
 			float[] a = project(velA, normal(relativeA), avalA );
 			float[] b = project(velB, normal(relativeB), avalB );
 			float[] relativeV = sub(b,a);
 			
-			// get relative velocities. if separating, skip impulse
+			// get relative velocities. if separating, skip adding forces
 			float contactV = dot(relativeV, normal);
-			if (contactV > 0) return;
+			if (contactV > 0f) return;
 			
 			// get masses from objects to calculate the impulse strength
 			float RAxN = cross(relativeA, normal);
@@ -164,7 +165,7 @@ public class Manifold
 			jt /= (invMassSum * (float)contact_count);
 			
 			// if tangent impulse is practically 0, don't do anything 
-			if (ImpulseMath.isEqual(jt, 0.0f)) continue;
+			if (ImpulseMath.isZero(jt)) continue;
 				
 			// apply Coulumb's law for friction
 			if (StrictMath.abs(jt) < j*sFriction)
@@ -200,6 +201,7 @@ public class Manifold
 			float[] p = project(A.getLinearMotion().getPosition(), normal, -corr*imassA );
 			A.getLinearMotion().setPosition(p);
 		}
+		
 		if (!B.isImmovable()) 
 		{
 			float[] p = project(B.getLinearMotion().getPosition(), normal,  corr*imassB );
