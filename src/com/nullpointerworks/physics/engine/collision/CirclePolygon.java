@@ -61,7 +61,8 @@ public class CirclePolygon implements CollisionSolver
 		
 		m.contact_count = 0;
 		
-		// if the biggest positive separation is beyond the radius, return. no collision
+		// if the biggest positive separation is beyond the radius
+		// no collision
 		if (separation > radiusA) 
 		{
 			return;
@@ -80,65 +81,72 @@ public class CirclePolygon implements CollisionSolver
 			return;
 		}
 		
-		// get face vertices
-		float[] v1 = verticesB[face_normal];
-		float[] v2 = verticesB[(face_normal+1)%v_count];
-		
-		m.penetration = radiusA - separation;
-		m.contact_count = 1;
-		
-		// dot product vertex projection
-		// t = q*a / a*a without the divide. if less than 0, closest on one side
-		
-		// closest to vertex 1, corner voronoi region
-		// find the region(voronoi) of the face on the polygon
-		float dot1 = dot( sub(center,v1) , sub(v2,v1) );
-		if (dot1 < 0.0f)
+		// collision
+		if (separation < radiusA) 
 		{
-			m.penetration *= 0.1f;
+			// get face vertices
+			float[] v1 = verticesB[face_normal];
+			float[] v2 = verticesB[(face_normal+1)%v_count];
 			
-			float[] vc = sub(v1, center); // get tangent
-			if (dot(vc, vc) > radiusA*radiusA) return;
+			m.contact_count = 1;
+			m.penetration = radiusA - separation;
 			
-			// rotate vector to polygon world space
-			vc = transform(rotationB, vc);
-			m.normal = normalize(vc);
+			// dot product vertex projection
+			// t = q*a / a*a without the divide. if less than 0, closest on one side
 			
-			// rotate vertex to polygon world space
-			float[] v = transform(rotationB, v1);
-			m.contacts[0] = add(positionB, v);
-			return;
+			// first check to see if the circle collides on a corner of the polygon
+			
+			// closest to vertex 1, corner voronoi region
+			float dot1 = dot( sub(center,v1) , sub(v2,v1) );
+			if (dot1 < 0.0f)
+			{
+				float[] vc = sub(v1, center); // get reverse
+				if (dot(vc, vc) > radiusA*radiusA) return;
+				
+				// rotate vector to polygon world space
+				vc = transform(rotationB, vc);
+				
+				// rotate vertex to polygon world space
+				float[] v = transform(rotationB, v1);
+				
+				m.normal = normalize(vc);
+				m.contacts[0] = add(positionB, v);
+				m.penetration *= 0.1f;
+				return;
+			}
+			
+			// closest to vertex 2, corner voronoi region
+			float dot2 = dot( sub(center,v2) , sub(v1,v2) );
+			if (dot2 < 0.0f)
+			{
+				float[] vc = sub(v2, center); // get reverse
+				if (dot(vc, vc) > radiusA*radiusA) return;
+				
+				// rotate vector to polygon world space
+				vc = transform(rotationB, vc);
+				
+				// rotate vertex to polygon world space
+				float[] v = transform(rotationB, v2);
+				
+				m.normal = normalize(vc);
+				m.contacts[0] = add(positionB, v);
+				m.penetration *= 0.1f;
+				
+				return;
+			}
+			
+			// is inside the voronoi region
+			// in other words, the circle is hitting a face of the polygon
+			float[] n = normalsB[face_normal];
+			
+			float[] norm = sub(center,v1);
+			float dist = dot(norm , n);
+			if (dist > radiusA) return;
+			
+			norm = transform(rotationB, n );
+			norm = neg(norm);
+			m.normal = normalize(norm);
+			m.contacts[0] = project(positionA, m.normal, radiusA);
 		}
-		
-		// closest to vertex 2, corner voronoi region
-		float dot2 = dot( sub(center,v2) , sub(v1,v2) );
-		if (dot2 < 0.0f)
-		{
-			m.penetration *= 0.1f;
-			
-			float[] vc = sub(v2, center); // get tangent
-			if (dot(vc, vc) > radiusA*radiusA) return;
-			
-			// rotate vector to polygon world space
-			vc = transform(rotationB, vc);
-			m.normal = normalize(vc);
-			
-			// rotate vertex to polygon world space
-			float[] v = transform(rotationB, v2);
-			m.contacts[0] = add(positionB, v);
-			return;
-		}
-		
-		// is inside the voronoi region
-		float[] n = normalsB[face_normal];
-		
-		float[] norm = sub(center,v1);
-		float dist = dot(norm , n);
-		if (dist > radiusA) return;
-		
-		norm = transform(rotationB, n );
-		norm = neg(norm);
-		m.normal = normalize(norm);
-		m.contacts[0] = project(positionA, m.normal, radiusA);
 	}
 }

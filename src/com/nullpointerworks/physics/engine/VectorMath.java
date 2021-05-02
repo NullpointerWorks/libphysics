@@ -36,6 +36,11 @@ public class VectorMath
 							a[1]-b[1]};
 	}
 	
+	public static float[] vector(float[] a, float[] b)
+	{
+		return sub(b,a);
+	}
+	
 	public static float[] mul(float[] a, float f)
 	{
 		return new float[]{	a[0]*f,

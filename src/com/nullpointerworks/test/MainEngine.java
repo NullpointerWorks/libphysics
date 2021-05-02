@@ -29,7 +29,7 @@ public class MainEngine
 		RenderCommand cRenderToScreen 	= new CanvasRenderCommand(vWindow, mPhysiscSim);
 		
 		mPhysiscSim.setTargetFPS(100);
-		mPhysiscSim.setGravity( VectorMath.create(0f, -10f) , (float)PlanetaryGravitation.LUNA );
+		mPhysiscSim.setGravity( VectorMath.create(0f, -10f) , (float)PlanetaryGravitation.EARTH );
 		mPhysiscSim.setIntegrationCycles(20);
 		
 		mGameSim.setTargetFPS(30);
