@@ -14,7 +14,7 @@ import com.nullpointerworks.game.Variable;
 import com.nullpointerworks.physics.engine.Composite;
 import com.nullpointerworks.physics.engine.manifold.Manifold;
 
-public class PhysicsLoop extends Variable
+public class PhysicsLoop extends ManagedLoop
 {
 	private List<Composite> bodies;
 	private List<Manifold> contacts;
