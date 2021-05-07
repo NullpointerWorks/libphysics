@@ -9,8 +9,8 @@ public class StaticMaterial implements Material
 	
 	public StaticMaterial()
 	{
-		density 	= 0.0f;
-		restitution = 0.0f;
+		density 	= 0.1f;
+		restitution = 0.1f;
 		staticF 	= 0.5f;
 		kineticF 	= 0.3f;
 	}

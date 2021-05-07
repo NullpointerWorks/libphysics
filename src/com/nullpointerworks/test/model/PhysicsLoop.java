@@ -10,7 +10,6 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Vector;
 
-import com.nullpointerworks.game.Variable;
 import com.nullpointerworks.physics.engine.Composite;
 import com.nullpointerworks.physics.engine.manifold.Manifold;
 
@@ -127,9 +126,6 @@ public class PhysicsLoop extends ManagedLoop
 		bodies.clear();
 		contacts.clear();
 	}
-	
-	@Override
-	public void onRender(double interpolation) { }
 
 	@Override
 	public void onDispose() 
