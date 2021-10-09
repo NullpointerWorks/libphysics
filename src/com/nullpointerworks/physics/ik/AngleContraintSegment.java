@@ -1,5 +1,7 @@
 package com.nullpointerworks.physics.ik;
 
+import com.nullpointerworks.math.Approximate;
+
 public class AngleContraintSegment extends AbstractSegment
 {
 	private float constraint;
@@ -8,7 +10,7 @@ public class AngleContraintSegment extends AbstractSegment
 	{
 		setBase( V2.New(x,y) );
 		setMagnitude(l);
-		constraint = phi;
+		setConstraint(phi);
 		setParent(null);
 	}
 	
@@ -21,6 +23,11 @@ public class AngleContraintSegment extends AbstractSegment
 	{
 		this(p.getBase(), l, phi);
 		setParent(p);
+	}
+	
+	public void setConstraint(float phi)
+	{
+		constraint = phi;
 	}
 	
 	// ===========================================================
@@ -38,11 +45,11 @@ public class AngleContraintSegment extends AbstractSegment
 		setAngle( angle );
 		
 		// constraint angle
-		float a = parent.getAngle() - angle;
-		if (abs(a) > constraint)
+		float dt = parent.getAngle() - angle;
+		if (abs(dt) > constraint)
 		{
-			float theta = parent.getAngle() - ( constraint * sign(a) );
-			float[] rot = V2.rotation(theta);
+			dt = parent.getAngle() - ( constraint * sign(dt) );
+			float[] rot = V2.rotation(dt);
 			dir = V2.mul(rot, l);
 		}
 		
@@ -54,6 +61,19 @@ public class AngleContraintSegment extends AbstractSegment
 		
 		// call parent
 		if (parent!=null) parent.follow(this);
+	}
+	
+	// ===========================================================
+	
+	private final float PI = 3.1415926f;
+	private final float TAU = 2f * PI;
+	
+	/*
+	 * atan2 returns a value from -pi > x > pi
+	 */
+	private float heading(float[] delta)
+	{
+		return (float)Approximate.atan2(delta[1], delta[0]);
 	}
 	
 	private float abs(float a) 
