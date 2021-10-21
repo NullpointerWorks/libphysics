@@ -39,14 +39,22 @@ public class AngleContraintSegment extends AbstractSegment
 		
 		// calc current angle
 		float[] dir = V2.sub(target, base);
-		float angle = heading(dir);
+		float angle = atan2(dir);
 		setAngle( angle );
 		
 		// constraint angle
-		float dt = parent.getAngle() - angle;
+		float a = getAngle();
+		float pa = parent.getAngle();
+		
+		if (!sameSign(a,pa))
+		{
+			if (pa > a) a += TAU;
+		}
+		
+		float dt = a - pa;
 		if (abs(dt) > constraint)
 		{
-			dt = parent.getAngle() - ( constraint * sign(dt) );
+			dt = parent.getAngle() + ( constraint * sign(dt) );
 			float[] rot = V2.rotation(dt);
 			dir = V2.mul(rot, l);
 		}

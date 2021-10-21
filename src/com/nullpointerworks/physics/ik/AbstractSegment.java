@@ -95,11 +95,9 @@ public abstract class AbstractSegment implements Segment
 	/*
 	 * atan2 returns a value from -pi > x > pi
 	 */
-	protected float heading(float[] delta)
+	protected float atan2(float[] delta)
 	{
-		float a = (float)Approximate.atan2(delta[1], delta[0]);
-		if (a < 0f) a = TAU + a;
-		return a;
+		return (float)Approximate.atan2(delta[1], delta[0]);
 	}
 	
 	protected float abs(float a) 
@@ -110,5 +108,10 @@ public abstract class AbstractSegment implements Segment
 	protected float sign(float a) 
 	{
 		return (a<0f)? -1f : 1f;
+	}
+	
+	protected boolean sameSign(float a, float b) 
+	{
+		return (a * b) >= 0f;
 	}
 }

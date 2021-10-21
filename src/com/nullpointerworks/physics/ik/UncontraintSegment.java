@@ -28,7 +28,7 @@ public class UncontraintSegment extends AbstractSegment
 		float l = getMagnitude();
 		float[] base = getBase();
 		float[] dir = V2.sub(target, base);
-		setAngle( heading(dir) );
+		setAngle( atan2(dir) );
 		
 		dir = V2.normalize(dir);
 		dir = V2.mul(dir, -l);
