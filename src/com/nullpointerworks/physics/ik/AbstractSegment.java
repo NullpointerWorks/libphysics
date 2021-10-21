@@ -86,4 +86,29 @@ public abstract class AbstractSegment implements Segment
 		base = V2.add(base,delta);
 		if (parent!=null) parent.position(delta);
 	}
+	
+	// ===========================================================
+	
+	protected final float PI = 3.1415926f;
+	protected final float TAU = 2f * PI;
+	
+	/*
+	 * atan2 returns a value from -pi > x > pi
+	 */
+	protected float heading(float[] delta)
+	{
+		float a = (float)Approximate.atan2(delta[1], delta[0]);
+		if (a < 0f) a = TAU + a;
+		return a;
+	}
+	
+	protected float abs(float a) 
+	{
+		return (a<0f)? -a : a;
+	}
+	
+	protected float sign(float a) 
+	{
+		return (a<0f)? -1f : 1f;
+	}
 }

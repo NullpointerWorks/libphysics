@@ -1,7 +1,5 @@
 package com.nullpointerworks.physics.ik;
 
-import com.nullpointerworks.math.Approximate;
-
 public class AngleContraintSegment extends AbstractSegment
 {
 	private float constraint;
@@ -61,28 +59,5 @@ public class AngleContraintSegment extends AbstractSegment
 		
 		// call parent
 		if (parent!=null) parent.follow(this);
-	}
-	
-	// ===========================================================
-	
-	private final float PI = 3.1415926f;
-	private final float TAU = 2f * PI;
-	
-	/*
-	 * atan2 returns a value from -pi > x > pi
-	 */
-	private float heading(float[] delta)
-	{
-		return (float)Approximate.atan2(delta[1], delta[0]);
-	}
-	
-	private float abs(float a) 
-	{
-		return (a<0f)? -a : a;
-	}
-	
-	private float sign(float a) 
-	{
-		return (a<0f)? -1f : 1f;
 	}
 }

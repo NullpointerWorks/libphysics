@@ -1,7 +1,5 @@
 package com.nullpointerworks.physics.ik;
 
-import com.nullpointerworks.math.Approximate;
-
 public class UncontraintSegment extends AbstractSegment
 {
 	public UncontraintSegment(float x, float y, float l)
@@ -38,15 +36,5 @@ public class UncontraintSegment extends AbstractSegment
 		setBase(base);
 		
 		if (parent!=null) parent.follow(this);
-	}
-	
-	// ===========================================================
-	
-	/*
-	 * atan2 returns a value from -pi > x > pi
-	 */
-	private float heading(float[] delta)
-	{
-		return (float)Approximate.atan2(delta[1], delta[0]);
 	}
 }
