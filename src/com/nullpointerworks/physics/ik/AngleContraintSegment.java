@@ -41,11 +41,11 @@ public class AngleContraintSegment extends AbstractSegment
 		float[] dir = V2.sub(target, base);
 		setAngle( atan2(dir) );
 		
-		// constraint angle
+		// get angles to compare
 		float a = getAngle();
 		float pa = parent.getAngle();
 		
-		// correct for the sin(x) plane traversal
+		// correct for the sin(x) plane traversal (difference between positive and negative angles)
 		if (!sameSign(a,pa)) 
 		{
 			if (pa > a) pa += TAU; // bending down
@@ -59,8 +59,9 @@ public class AngleContraintSegment extends AbstractSegment
 				pa = t;
 			}
 		}
+		float dt = a - pa; // find difference in angle 
 		
-		float dt = a - pa;
+		// constraint angle
 		if (abs(dt) > constraint)
 		{
 			dt = parent.getAngle() + ( constraint * sign(dt) );
