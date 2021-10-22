@@ -24,17 +24,16 @@ public class UncontraintSegment extends AbstractSegment
 	
 	public void follow(float[] target)
 	{
-		Segment parent = getParent();
-		float l = getMagnitude();
 		float[] base = getBase();
 		float[] dir = V2.sub(target, base);
 		setAngle( atan2(dir) );
 		
 		dir = V2.normalize(dir);
-		dir = V2.mul(dir, -l);
-		base = V2.add(target, dir);
+		dir = V2.mul(dir, getMagnitude());
+		base = V2.sub(target, dir);
 		setBase(base);
 		
+		Segment parent = getParent();
 		if (parent!=null) parent.follow(this);
 	}
 }
