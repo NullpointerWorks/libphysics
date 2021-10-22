@@ -39,16 +39,25 @@ public class AngleContraintSegment extends AbstractSegment
 		
 		// calc current angle
 		float[] dir = V2.sub(target, base);
-		float angle = atan2(dir);
-		setAngle( angle );
+		setAngle( atan2(dir) );
 		
 		// constraint angle
 		float a = getAngle();
 		float pa = parent.getAngle();
 		
-		if (!sameSign(a,pa))
+		// correct for the sin(x) plane traversal
+		if (!sameSign(a,pa)) 
 		{
-			if (pa > a) a += TAU;
+			if (pa > a) pa += TAU; // bending down
+			else
+			if (a > pa) a += TAU; // bending up
+			
+			if (dir[0] < 0f) // if directing to the left, swap calculation
+			{
+				float t = a;
+				a = pa;
+				pa = t;
+			}
 		}
 		
 		float dt = a - pa;
@@ -61,8 +70,8 @@ public class AngleContraintSegment extends AbstractSegment
 		
 		// re-calc direction
 		dir = V2.normalize(dir);
-		dir = V2.mul(dir, -l);
-		base = V2.add(target, dir);
+		dir = V2.mul(dir, l);
+		base = V2.sub(target, dir);
 		setBase(base);
 		
 		// call parent
